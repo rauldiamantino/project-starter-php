@@ -11,122 +11,128 @@ use core\library\Response;
 use core\library\Controller;
 use FastRoute\RouteCollector;
 use app\controllers\NotFoundController;
-use function FastRoute\simpleDispatcher;
 use app\controllers\MethodNotAllowedController;
+
+use function FastRoute\simpleDispatcher;
 
 class Router
 {
-  private array $routes;
-  private array $group = [];
+    private array $routes;
+    private array $group = [];
 
-  public function __construct(
-    private Container $container,
-    public readonly Request  $request,
-  ) {}
-
-  public function group(string $prefix, Closure $callback)
-  {
-    $this->group[ $prefix ] = $callback;
-  }
-
-  public function add(string $method, string $uri, array|Closure $controller)
-  {
-    $this->routes[] = [$method, $uri, $controller];
-  }
-
-  public function run()
-  {
-    $dispatcher = simpleDispatcher(function (RouteCollector $r) {
-
-      if ($this->group) {
-        $this->group_routes($r);
-      }
-
-      foreach ($this->routes as $route):
-        $r->addRoute(...$route);
-      endforeach;
-    });
-
-    $httpMethod = $_SERVER['REQUEST_METHOD'];
-    $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
-
-    if ($httpMethod == 'POST' && isset($this->request->post['__method']) && in_array($this->request->post['__method'], ['PUT', 'DELETE'])) {
-      $httpMethod = $this->request->post['__method'];
+    public function __construct(
+        private Container $container,
+        public readonly Request  $request,
+    ) {
     }
 
-    if ($uri !== '/') {
-      $uri = rtrim($uri, '/');
+    public function group(string $prefix, Closure $callback)
+    {
+        $this->group[$prefix] = $callback;
     }
 
-    $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
+    public function add(string $method, string $uri, array|Closure $controller)
+    {
+        $this->routes[] = [$method, $uri, $controller];
+    }
 
-    $this->handle($routeInfo);
-  }
+    public function run()
+    {
+        $dispatcher = simpleDispatcher(function (RouteCollector $r) {
 
-  private function group_routes(RouteCollector $r)
-  {
-    foreach ($this->group as $prefix => $routes):
-      $r->addGroup($prefix, function (RouteCollector $r) use ($routes) {
-        foreach ($routes() as $route):
-          $r->addRoute(...$route);
-        endforeach;
-      });
-    endforeach;
-  }
+            if ($this->group) {
+                $this->group_routes($r);
+            }
 
-  private function handle(array $routeInfo)
-  {
-    switch ($routeInfo[0]) {
-      case Dispatcher::NOT_FOUND:
-        $controller = NotFoundController::class;
-        $method = 'index';
-        $vars = [];
+            foreach ($this->routes as $route) {
+                $r->addRoute(...$route);
+            }
+        });
 
-        break;
-      case Dispatcher::METHOD_NOT_ALLOWED:
-        $controller = MethodNotAllowedController::class;
-        $method = 'index';
-        $vars = [];
+        $httpMethod = $_SERVER['REQUEST_METHOD'];
+        $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 
-        break;
-      case Dispatcher::FOUND:
-        [, $controller, $vars] = $routeInfo;
-
-        if (is_callable($controller)) {
-          $method = null;
+        if (
+            $httpMethod === 'POST' &&
+            isset($this->request->post['__method']) &&
+            in_array($this->request->post['__method'], ['PUT', 'DELETE'], true)
+        ) {
+            $httpMethod = $this->request->post['__method'];
         }
 
-        if (is_array($controller)) {
-          [$controller, $method] = $controller;
+        if ($uri !== '/') {
+            $uri = rtrim($uri, '/');
         }
 
-        break;
+        $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
+
+        $this->handle($routeInfo);
     }
 
-    $this->send($controller, $method, $vars);
-  }
-
-  private function send(string|Closure $controller, ?string $method, array $vars)
-  {
-    if (is_callable($controller) && is_null($method)) {
-      $closure = $controller->bindTo($this);
-
-      return call_user_func_array($closure, $vars);
+    private function group_routes(RouteCollector $r)
+    {
+        foreach ($this->group as $prefix => $routes) {
+            $r->addGroup($prefix, function (RouteCollector $r) use ($routes) {
+                foreach ($routes() as $route) {
+                    $r->addRoute(...$route);
+                }
+            });
+        }
     }
 
-    $controller = $this->container->get($controller);
+    private function handle(array $routeInfo)
+    {
+        switch ($routeInfo[0]) {
+            case Dispatcher::NOT_FOUND:
+                $controller = NotFoundController::class;
+                $method = 'index';
+                $vars = [];
 
-    if (is_subclass_of($controller, Controller::class)) {
-      $controller->setRequest($this->request);
+                break;
+            case Dispatcher::METHOD_NOT_ALLOWED:
+                $controller = MethodNotAllowedController::class;
+                $method = 'index';
+                $vars = [];
+
+                break;
+            case Dispatcher::FOUND:
+                [, $controller, $vars] = $routeInfo;
+
+                if (is_callable($controller)) {
+                    $method = null;
+                }
+
+                if (is_array($controller)) {
+                    [$controller, $method] = $controller;
+                }
+
+                break;
+        }
+
+        $this->send($controller, $method, $vars);
     }
 
-    $response = call_user_func_array([$controller, $method], $vars);
-    $controller_namespace = get_class($controller);
+    private function send(string|Closure $controller, ?string $method, array $vars)
+    {
+        if (is_callable($controller) && is_null($method)) {
+            $closure = $controller->bindTo($this);
 
-    if (! $response or ! $response instanceof Response) {
-      throw new Exception('Response not found in ' . $controller_namespace . 'controller and ' . $method . ' method.');
+            return call_user_func_array($closure, $vars);
+        }
+
+        $controller = $this->container->get($controller);
+
+        if (is_subclass_of($controller, Controller::class)) {
+            $controller->setRequest($this->request);
+        }
+
+        $response = call_user_func_array([$controller, $method], $vars);
+        $controller_namespace = get_class($controller);
+
+        if (!$response or !$response instanceof Response) {
+            throw new Exception('Response not found in ' . $controller_namespace . 'controller and ' . $method . ' method.');
+        }
+
+        $response->send();
     }
-
-    $response->send();
-  }
 }

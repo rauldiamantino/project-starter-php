@@ -9,33 +9,32 @@ use Respect\Validation\Exceptions\NestedValidationException;
 
 abstract class FormRequest
 {
-  protected Request $request;
+    protected Request $request;
 
-  public function is_validated(Validator $validate): bool
-  {
-    try {
-      $validate->assert($this->request->post);
+    public function is_validated(Validator $validate): bool
+    {
+        try {
+            $validate->assert($this->request->post);
 
-      return true;
+            return true;
+        } catch (NestedValidationException $e) {
+            Session::flashes($e->getMessages());
+
+            return false;
+        }
     }
-    catch (NestedValidationException $e) {
-      Session::flashes($e->getMessages());
 
-      return false;
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+
+        return $this;
     }
-  }
 
-  public function setRequest(Request $request)
-  {
-    $this->request = $request;
+    public static function validate(Request $request)
+    {
+        return (new static())->setRequest($request)->execute();
+    }
 
-    return $this;
-  }
-
-  public static function validate(Request $request)
-  {
-    return (new static)->setRequest($request)->execute();
-  }
-
-  abstract protected function execute();
+    abstract protected function execute();
 }

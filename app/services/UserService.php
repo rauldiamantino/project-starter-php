@@ -10,41 +10,41 @@ use app\exceptions\EmailAlreadyExistsException;
 
 class UserService
 {
-  private UserRepository $userRepository;
+    private UserRepository $userRepository;
 
-  public function __construct(UserRepository $userRepository)
-  {
-    $this->userRepository = $userRepository;
-  }
-
-  public function createUser(array $userData): Entity
-  {
-    if ($this->userRepository->emailExists($userData['email'])) {
-      throw new EmailAlreadyExistsException('The email already exists');
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
     }
 
-    $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
+    public function createUser(array $userData): Entity
+    {
+        if ($this->userRepository->emailExists($userData['email'])) {
+            throw new EmailAlreadyExistsException('The email already exists');
+        }
 
-    $data = [
-      'name' => $userData['name'],
-      'email' => $userData['email'],
-      'company_id' => $userData['company_id'],
-      'password' => $hashedPassword,
-      'level' => $userData['level'],
-    ];
+        $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
 
-    $entity = UserEntity::create($data);
+        $data = [
+          'name' => $userData['name'],
+          'email' => $userData['email'],
+          'company_id' => $userData['company_id'],
+          'password' => $hashedPassword,
+          'level' => $userData['level'],
+        ];
 
-    if ($entity instanceof EntityNotFound) {
-      throw new RuntimeException('Internal error: could not create user entity');
+        $entity = UserEntity::create($data);
+
+        if ($entity instanceof EntityNotFound) {
+            throw new RuntimeException('Internal error: could not create user entity');
+        }
+
+        $insertedId = $this->userRepository->create($entity);
+
+        if ($insertedId <= 0) {
+            throw new RuntimeException('Internal error when persisting user in database');
+        }
+
+        return $entity;
     }
-
-    $insertedId = $this->userRepository->create($entity);
-
-    if ($insertedId <= 0) {
-      throw new RuntimeException('Internal error when persisting user in database');
-    }
-
-    return $entity;
-  }
 }

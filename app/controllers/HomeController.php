@@ -9,13 +9,13 @@ use app\database\repositories\UserRepository;
 
 class HomeController extends Controller
 {
-  public function __construct(Twig $twig, private UserRepository $userRepository)
-  {
-    parent::__construct($twig);
-  }
+    public function __construct(Twig $twig, private UserRepository $userRepository)
+    {
+        parent::__construct($twig);
+    }
 
-  public function index(): Response
-  {
-    return $this->render('home/index.twig', ['message' => 'Welcome']);
-  }
+    public function index(): Response
+    {
+        return $this->render('home/index.twig', ['message' => 'Welcome']);
+    }
 }

@@ -4,5 +4,5 @@ namespace core\dbal;
 
 interface AuthInterface
 {
-  public function auth(string $email):Entity;
+    public function auth(string $email): Entity;
 }
