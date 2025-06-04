@@ -12,14 +12,14 @@ class Twig
 
     public function __construct()
     {
-        $loader = new FilesystemLoader(dirname(__FILE__, 3) . '/app/views');
+        $loader = new FilesystemLoader(dirname(__FILE__, 3) . '/App/Views');
 
         $this->env = new Environment($loader, ['debug' => false]);
     }
 
     public function add_functions()
     {
-        $functions = require dirname(__FILE__, 2) . '/functions/twig.php';
+        $functions = require dirname(__FILE__, 2) . '/Functions/twig.php';
 
         foreach ($functions as $index => $function) {
             $function = new TwigFunction($index, $function);

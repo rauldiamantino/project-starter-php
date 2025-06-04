@@ -26,7 +26,7 @@ abstract class Repository
             $queryBuilder = $this->connection->createQueryBuilder();
 
             $results = $queryBuilder->select('*')
-                ->from($this->tables)
+                ->from($this->table)
                 ->fetchAllAssociative();
 
             $entities = [];

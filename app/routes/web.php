@@ -5,7 +5,7 @@ use Core\Library\Router;
 use App\Controllers\UserController;
 use App\Controllers\LoginController;
 
-$admin = require basePath() . '/app/routes/admin.php';
+$admin = require basePath() . '/App/Routes/admin.php';
 
 $router = $container->get(Router::class);
 $router->add('GET', '/', [HomeController::class, 'index']);

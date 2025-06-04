@@ -15,7 +15,7 @@ class Container
     public function build(array $services = [])
     {
         $this->load($services);
-        $this->services[] = dirname(__FILE__, 2) . '/services/services.php';
+        $this->services[] = dirname(__FILE__, 2) . '/Services/services.php';
         $container = new ContainerBuilder();
         $container->addDefinitions(...$this->services);
 
@@ -29,12 +29,12 @@ class Container
 
     private function load(array $services)
     {
-        $default = dirname(__FILE__, 2) . '/services/services.php';
+        $default = dirname(__FILE__, 2) . '/Services/services.php';
         $this->services[] = $default;
 
         if ($services) {
             foreach ($services as $service) {
-                $this->services[] = dirname(__FILE__, 3) . '/app/services/' . $service . '.php';
+                $this->services[] = dirname(__FILE__, 3) . '/App/Services/' . $service . '.php';
             }
         }
     }

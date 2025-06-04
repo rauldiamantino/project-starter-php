@@ -2,7 +2,7 @@
 
 use Core\Library\Session;
 
-$app_functions = dirname(__FILE__, 3) . '/app/functions/twig.php';
+$app_functions = dirname(__FILE__, 3) . '/App/Functions/twig.php';
 
 if (!file_exists($app_functions)) {
     throw new Exception('Please create functions file inside functions folder');

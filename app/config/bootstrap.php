@@ -2,7 +2,7 @@
 
 use Core\Library\Container;
 
-$services = require basePath() . '/app/services/services.php';
+$services = require basePath() . '/App/Services/Services.php';
 $container = new Container();
 $container = $container->build(['services']);
 
