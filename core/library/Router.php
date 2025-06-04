@@ -3,6 +3,7 @@
 namespace core\library;
 
 use Closure;
+use Exception;
 use DI\Container;
 use core\library\Request;
 use FastRoute\Dispatcher;
@@ -123,7 +124,7 @@ class Router
     $controller_namespace = get_class($controller);
 
     if (! $response or ! $response instanceof Response) {
-      throw new \Exception('Response not found in ' . $controller_namespace . 'controller and ' . $method . ' method.');
+      throw new Exception('Response not found in ' . $controller_namespace . 'controller and ' . $method . ' method.');
     }
 
     $response->send();

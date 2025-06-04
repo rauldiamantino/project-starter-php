@@ -27,7 +27,7 @@ class Request
       throw new Exception('Request ' . $request . ' not accepted');
     }
 
-    $sanitize = new Sanitize;
+    $sanitize = new Sanitize();
     $sanitize->execute($this->$request);
 
     return $sanitize;

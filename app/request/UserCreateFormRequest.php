@@ -11,7 +11,7 @@ class UserCreateFormRequest extends FormRequest
 {
   protected function execute(): bool
   {
-    $validate = new Validator;
+    $validate = new Validator();
 
     $validate->addRule(
       new Key('name', Validator::notEmpty()->setTemplate('Field required')),

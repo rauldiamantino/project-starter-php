@@ -19,7 +19,7 @@ return [
   Logger::class => create(Logger::class)->constructor($logFilePath),
 
   Twig::class => function () {
-    $twig = new Twig;
+    $twig = new Twig();
     $twig->add_functions();
     $twig->env->addExtension(new DebugExtension());
 
