@@ -29,7 +29,7 @@ abstract class Controller
   {
     $redirect = new Redirect($url);
 
-    if ($type and $message) {
+    if ($type && $message) {
       $redirect->withMessage($type, $message);
     }
 

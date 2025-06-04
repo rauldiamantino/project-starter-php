@@ -78,7 +78,7 @@ class Session
 
   public static function flash_remove()
   {
-    if ($_SERVER['REQUEST_METHOD'] === 'GET' and self::has('__flash')) {
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && self::has('__flash')) {
       unset($_SESSION['__flash']);
     }
   }

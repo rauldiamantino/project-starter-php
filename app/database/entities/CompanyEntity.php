@@ -18,7 +18,7 @@ class CompanyEntity extends Entity
 
   public static function create(array $properties): Entity
   {
-    if (! is_array($properties) or empty($properties)) {
+    if (! is_array($properties) || empty($properties)) {
       throw new InvalidArgumentException('Invalid or empty properties array provided to create CompanyEntity.');
     }
 

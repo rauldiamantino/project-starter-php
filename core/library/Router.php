@@ -50,7 +50,7 @@ class Router
     $httpMethod = $_SERVER['REQUEST_METHOD'];
     $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 
-    if ($httpMethod == 'POST' and isset($this->request->post['__method']) and in_array($this->request->post['__method'], ['PUT', 'DELETE'])) {
+    if ($httpMethod == 'POST' && isset($this->request->post['__method']) && in_array($this->request->post['__method'], ['PUT', 'DELETE'])) {
       $httpMethod = $this->request->post['__method'];
     }
 
@@ -108,7 +108,7 @@ class Router
 
   private function send(string|Closure $controller, ?string $method, array $vars)
   {
-    if (is_callable($controller) and is_null($method)) {
+    if (is_callable($controller) && is_null($method)) {
       $closure = $controller->bindTo($this);
 
       return call_user_func_array($closure, $vars);

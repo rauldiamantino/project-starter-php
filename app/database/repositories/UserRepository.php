@@ -50,7 +50,7 @@ class UserRepository extends Repository implements AuthInterface
                                ->setParameter('id', $id)
                                ->fetchAssociative();
 
-      if ($selected === false or empty($selected)) {
+      if ($selected === false || empty($selected)) {
         $this->logger->info("User with ID '{$id}' not found in database.");
 
         throw new EntityNotFound("User with ID '{$id}' not found.");
@@ -213,7 +213,7 @@ class UserRepository extends Repository implements AuthInterface
                                ->where('email = ' . $queryBuilder->createNamedParameter($email))
                                ->fetchAssociative();
 
-      if ($selected === false or empty($selected)) {
+      if ($selected === false || empty($selected)) {
         $this->logger->info("Authentication attempt for email '{$email}' failed: User not found.");
 
         throw new EntityNotFound("User with email '{$email}' not found.");
