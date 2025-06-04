@@ -1,0 +1,16 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+
+<h2 class="text-2xl font-bold">Users</h2>
+
+<ul>
+  {% for user in users %}
+    <li>ID: {{ user.id }}</li>
+    <li>Name: {{ user.name }}</li>
+  {% else %}
+    <li>No users found</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
