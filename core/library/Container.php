@@ -1,6 +1,6 @@
 <?php
 
-namespace core\library;
+namespace Core\Library;
 
 use DI\Container as DIContainer;
 use DI\ContainerBuilder;

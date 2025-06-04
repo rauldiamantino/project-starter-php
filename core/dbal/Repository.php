@@ -1,10 +1,10 @@
 <?php
 
-namespace core\dbal;
+namespace Core\Dbal;
 
 use PDOException;
-use core\dbal\Entity;
-use core\library\Logger;
+use Core\Dbal\Entity;
+use Core\Library\Logger;
 use RuntimeException;
 use Doctrine\DBAL\Connection;
 
@@ -26,7 +26,7 @@ abstract class Repository
             $queryBuilder = $this->connection->createQueryBuilder();
 
             $results = $queryBuilder->select('*')
-                ->from($this->table)
+                ->from($this->tables)
                 ->fetchAllAssociative();
 
             $entities = [];

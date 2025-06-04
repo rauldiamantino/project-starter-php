@@ -1,6 +1,6 @@
 <?php
 
-use core\library\Container;
+use Core\Library\Container;
 
 $services = require basePath() . '/app/services/services.php';
 $container = new Container();

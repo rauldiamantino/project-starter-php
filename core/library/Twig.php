@@ -1,6 +1,6 @@
 <?php
 
-namespace core\library;
+namespace Core\Library;
 
 use Twig\Environment;
 use Twig\TwigFunction;

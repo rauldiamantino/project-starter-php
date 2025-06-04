@@ -1,11 +1,11 @@
 <?php
 
-namespace core\library;
+namespace Core\Library;
 
-use core\library\Twig;
-use core\library\Request;
-use core\library\Redirect;
-use core\library\Response;
+use Core\Library\Twig;
+use Core\Library\Request;
+use Core\Library\Redirect;
+use Core\Library\Response;
 
 abstract class Controller
 {

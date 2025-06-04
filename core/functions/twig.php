@@ -1,6 +1,6 @@
 <?php
 
-use core\library\Session;
+use Core\Library\Session;
 
 $app_functions = dirname(__FILE__, 3) . '/app/functions/twig.php';
 

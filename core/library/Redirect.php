@@ -1,8 +1,8 @@
 <?php
 
-namespace core\library;
+namespace Core\Library;
 
-use core\library\Response;
+use Core\Library\Response;
 
 class Redirect extends Response
 {

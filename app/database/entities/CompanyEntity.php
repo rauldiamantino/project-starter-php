@@ -1,8 +1,8 @@
 <?php
 
-namespace app\database\entities;
+namespace App\Database\Entities;
 
-use core\dbal\Entity;
+use Core\Dbal\Entity;
 use InvalidArgumentException;
 
 class CompanyEntity extends Entity

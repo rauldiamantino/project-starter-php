@@ -1,11 +1,11 @@
 <?php
 
-namespace app\controllers;
+namespace App\Controllers;
 
-use core\library\Twig;
-use core\library\Response;
-use core\library\Controller;
-use app\database\repositories\UserRepository;
+use Core\Library\Twig;
+use Core\Library\Response;
+use Core\Library\Controller;
+use App\Database\Repositories\UserRepository;
 
 class HomeController extends Controller
 {

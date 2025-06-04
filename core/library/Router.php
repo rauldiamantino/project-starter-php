@@ -1,17 +1,17 @@
 <?php
 
-namespace core\library;
+namespace Core\Library;
 
 use Closure;
 use Exception;
 use DI\Container;
-use core\library\Request;
+use Core\Library\Request;
 use FastRoute\Dispatcher;
-use core\library\Response;
-use core\library\Controller;
+use Core\Library\Response;
+use Core\Library\Controller;
 use FastRoute\RouteCollector;
-use app\controllers\NotFoundController;
-use app\controllers\MethodNotAllowedController;
+use App\Controllers\NotFoundController;
+use App\Controllers\MethodNotAllowedController;
 
 use function FastRoute\simpleDispatcher;
 

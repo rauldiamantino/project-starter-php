@@ -1,12 +1,12 @@
 <?php
 
-namespace app\services;
+namespace App\Services;
 
 use RuntimeException;
-use app\database\repositories\UserRepository;
-use app\database\entities\UserEntity;
-use core\dbal\exceptions\EntityNotFound;
-use app\exceptions\EmailAlreadyExistsException;
+use App\Database\Repositories\UserRepository;
+use App\Database\Entities\UserEntity;
+use Core\Dbal\Exceptions\EntityNotFound;
+use App\Exceptions\EmailAlreadyExistsException;
 
 class UserService
 {

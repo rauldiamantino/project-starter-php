@@ -1,10 +1,10 @@
 <?php
 
-namespace core\library;
+namespace Core\Library;
 
-use core\library\Session;
-use core\dbal\exceptions\EntityNotFound;
-use app\database\repositories\UserRepository;
+use Core\Library\Session;
+use Core\Dbal\Exceptions\EntityNotFound;
+use App\Database\Repositories\UserRepository;
 
 class Auth
 {

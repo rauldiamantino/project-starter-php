@@ -2,11 +2,11 @@
     "name": "rauld/help-center",
     "autoload": {
         "psr-4": {
-            "app\\": "app/",
-            "core\\": "core/"
+            "App\\": "App/",
+            "Core\\": "Core/"
         },
         "files": [
-          "core/functions/helpers.php"
+          "Core/Functions/helpers.php"
         ]
     },
     "authors": [

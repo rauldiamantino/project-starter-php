@@ -1,10 +1,10 @@
 <?php
 
-namespace app\controllers;
+namespace App\Controllers;
 
-use core\library\Controller;
-use core\library\Response;
-use core\library\Twig;
+use Core\Library\Controller;
+use Core\Library\Response;
+use Core\Library\Twig;
 
 class NotFoundController extends Controller
 {

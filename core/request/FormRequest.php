@@ -1,9 +1,9 @@
 <?php
 
-namespace core\request;
+namespace Core\Request;
 
-use core\library\Request;
-use core\library\Session;
+use Core\Library\Request;
+use Core\Library\Session;
 use Respect\Validation\Validator;
 use Respect\Validation\Exceptions\NestedValidationException;
 

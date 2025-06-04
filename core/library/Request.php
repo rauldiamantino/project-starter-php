@@ -1,9 +1,9 @@
 <?php
 
-namespace core\library;
+namespace Core\Library;
 
 use Exception;
-use core\library\Sanitize;
+use Core\Library\Sanitize;
 
 class Request
 {

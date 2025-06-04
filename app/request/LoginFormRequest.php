@@ -1,8 +1,8 @@
 <?php
 
-namespace app\request;
+namespace App\Request;
 
-use core\request\FormRequest;
+use Core\Request\FormRequest;
 use Respect\Validation\Rules\AllOf;
 use Respect\Validation\Rules\Key;
 use Respect\Validation\Validator;

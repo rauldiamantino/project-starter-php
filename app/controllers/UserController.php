@@ -1,16 +1,17 @@
 <?php
 
-namespace app\controllers;
+namespace App\Controllers;
 
 use Throwable;
-use core\library\Twig;
-use core\library\Response;
-use core\library\Controller;
-use app\services\UserService;
-use app\request\UserCreateFormRequest;
-use core\dbal\exceptions\EntityNotFound;
-use app\database\repositories\UserRepository;
-use core\library\Logger;
+use Core\Library\Twig;
+use Core\Library\Response;
+use Core\Library\Controller;
+use Core\Dbal\Exceptions\EntityNotFound;
+use Core\Library\Logger;
+
+use App\Services\UserService;
+use App\Request\UserCreateFormRequest;
+use App\Database\Repositories\UserRepository;
 
 class UserController extends Controller
 {

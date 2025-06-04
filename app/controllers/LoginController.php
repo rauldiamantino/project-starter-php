@@ -1,12 +1,12 @@
 <?php
 
-namespace app\controllers;
+namespace App\Controllers;
 
-use core\library\Auth;
-use core\library\Twig;
-use core\library\Response;
-use core\library\Controller;
-use app\request\LoginFormRequest;
+use Core\Library\Auth;
+use Core\Library\Twig;
+use Core\Library\Response;
+use Core\Library\Controller;
+use App\Request\LoginFormRequest;
 
 class LoginController extends Controller
 {

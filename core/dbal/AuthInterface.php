@@ -1,6 +1,6 @@
 <?php
 
-namespace core\dbal;
+namespace Core\Dbal;
 
 interface AuthInterface
 {

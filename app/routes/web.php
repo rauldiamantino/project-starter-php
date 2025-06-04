@@ -1,9 +1,9 @@
 <?php
 
-use app\controllers\HomeController;
-use core\library\Router;
-use app\controllers\UserController;
-use app\controllers\LoginController;
+use App\Controllers\HomeController;
+use Core\Library\Router;
+use App\Controllers\UserController;
+use App\Controllers\LoginController;
 
 $admin = require basePath() . '/app/routes/admin.php';
 

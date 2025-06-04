@@ -1,13 +1,13 @@
 <?php
 
-namespace app\database\repositories;
+namespace App\Database\Repositories;
 
-use core\dbal\Entity;
+use Core\Dbal\Entity;
 use RuntimeException;
-use core\dbal\AuthInterface;
-use app\database\entities\UserEntity;
-use core\dbal\exceptions\EntityNotFound;
-use core\dbal\Repository;
+use Core\Dbal\AuthInterface;
+use App\Database\Entities\UserEntity;
+use Core\Dbal\Exceptions\EntityNotFound;
+use Core\Dbal\Repository;
 
 class UserRepository extends Repository implements AuthInterface
 {
