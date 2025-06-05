@@ -25,7 +25,7 @@ class LoginController extends Controller
         $validated = LoginFormRequest::validate($this->request);
 
         if (!$validated) {
-            return redirect('/login');
+            return $this->redirect('/login');
         }
 
         $request = $this->request->getRequest('post');
@@ -33,16 +33,16 @@ class LoginController extends Controller
         $auth = $this->auth->attempt($request->all());
 
         if (!$auth) {
-            return redirect('/login')->withMessage('error', 'Email or password incorrect');
+            return $this->redirect('/login', 'error', 'Email or password incorrect');
         }
 
-        return redirect('/');
+        return $this->redirect('/');
     }
 
     public function destroy(): Response
     {
         $this->auth->logout();
 
-        return redirect('/');
+        return $this->redirect('/');
     }
 }
