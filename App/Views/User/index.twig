@@ -1,16 +1,30 @@
 {% extends "layout.twig" %}
 
 {% block content %}
+<div class="max-w-4xl mx-auto mt-10">
+ 
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">Users</h2>
 
-<h2 class="text-2xl font-bold">Users</h2>
-
-<ul>
-  {% for user in users %}
-    <li>ID: {{ user.id }}</li>
-    <li>Name: {{ user.name }}</li>
+  {% if users %}
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {% for user in users %}
+        <div class="bg-white border border-gray-200 rounded-xl shadow p-5 hover:shadow-md transition">
+          <p class="text-sm text-gray-500">ID: <span class="font-medium text-gray-700">{{ user.id }}</span></p>
+          <p class="text-lg font-semibold text-gray-800 mt-1">{{ user.name }}</p>
+        </div>
+      {% endfor %}
+    </div>
   {% else %}
-    <li>No users found</li>
-  {% endfor %}
-</ul>
+    <div class="bg-yellow-100 text-yellow-800 border border-yellow-300 px-4 py-3 rounded shadow">
+      No users found
+    </div>
+  {% endif %}
 
+  <div class="mt-8">
+    <a href="/" 
+      class="inline-block text-blue-600 hover:text-blue-800 font-semibold rounded-md border border-blue-600 px-4 py-2 transition">
+      &larr; Back to Home
+    </a>
+  </div>
+</div>
 {% endblock %}

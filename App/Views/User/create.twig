@@ -6,7 +6,7 @@
   <div class="w-full max-w-xl bg-white shadow-lg rounded-xl p-8">
     <h2 class="text-2xl font-semibold mb-6 text-gray-800">Create User</h2>
 
-    <form method="post" action="/user/store" class="space-y-6">
+    <form method="post" action="/users/store" class="space-y-6">
 
       <div>
         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
@@ -43,9 +43,14 @@
           Create
         </button>
       </div>
-
     </form>
 
+    <div class="mt-8">
+      <a href="/" 
+        class="inline-block text-blue-600 hover:text-blue-800 font-semibold rounded-md border border-blue-600 px-4 py-2 transition">
+        &larr; Back to Home
+      </a>
+    </div>
   </div>
 </section>
 {% endblock %}

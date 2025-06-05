@@ -13,13 +13,13 @@ $router = $container->get(Router::class);
 $router->add('GET', '/', [HomeController::class, 'index']);
 
 $router->add('GET', '/users', [UserController::class, 'index']);
-$router->add('GET', '/user/{id:[0-9]+}', [UserController::class, 'show']);
-$router->add('GET', '/user/create', [UserController::class, 'create']);
-$router->add('POST', '/user/store', [UserController::class, 'store']);
+$router->add('GET', '/users/{id:[0-9]+}', [UserController::class, 'show']);
+$router->add('GET', '/users/create', [UserController::class, 'create']);
+$router->add('POST', '/users/store', [UserController::class, 'store']);
 
 $router->add('GET', '/companies', [CompanyController::class, 'index']);
-$router->add('GET', '/company/{id:[0-9]+}', [CompanyController::class, 'show']);
-$router->add('GET', '/company/create', [CompanyController::class, 'create']);
-$router->add('POST', '/company/store', [CompanyController::class, 'store']);
+$router->add('GET', '/companies/{id:[0-9]+}', [CompanyController::class, 'show']);
+$router->add('GET', '/companies/create', [CompanyController::class, 'create']);
+$router->add('POST', '/companies/store', [CompanyController::class, 'store']);
 
 $router->run();
