@@ -3,7 +3,6 @@
 namespace App\Request;
 
 use Core\Request\FormRequest;
-
 use Respect\Validation\Rules\AllOf;
 use Respect\Validation\Rules\Key;
 use Respect\Validation\Validator;

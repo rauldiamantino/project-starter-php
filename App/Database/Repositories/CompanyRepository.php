@@ -2,7 +2,6 @@
 
 namespace App\Database\Repositories;
 
-use Core\Dbal\Entity;
 use Core\Dbal\Repository;
 use Core\Dbal\exceptions\EntityNotFoundException;
 
@@ -17,7 +16,7 @@ class CompanyRepository extends Repository
 {
     protected string $table = 'companies';
 
-    protected function createEntityFromData(array $data): Entity
+    protected function createEntityFromData(array $data): CompanyEntity
     {
         try {
             $companyEntity = CompanyEntity::create($data);
@@ -30,7 +29,7 @@ class CompanyRepository extends Repository
         return $companyEntity;
     }
 
-    public function getCompanyById(int $id): Entity
+    public function getCompanyById(int $id): CompanyEntity
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
@@ -68,7 +67,7 @@ class CompanyRepository extends Repository
         }
     }
 
-    public function create(CompanyEntity $entity): int
+    public function create(CompanyEntity $entity): CompanyEntity
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
@@ -88,7 +87,16 @@ class CompanyRepository extends Repository
                 throw new RuntimeException('Failed to insert the company record into the database');
             }
 
-            return (int) $this->connection->lastInsertId();
+            $insertedId = (int) $this->connection->lastInsertId();
+
+            $entityData = [
+                'id' => $insertedId,
+                'name' => $entity->name,
+                'slug' => $entity->slug,
+                'cnpj' => $entity->cnpj,
+            ];
+
+            return CompanyEntity::create($entityData);
         } catch (DBALException $e) {
             $this->logger->error(
                 'DBAL Error in Company::create: ' . $e->getMessage(),
@@ -196,7 +204,7 @@ class CompanyRepository extends Repository
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
 
-            $deletedRows = $this->$queryBuilder->delete($this->table)
+            $deletedRows = $queryBuilder->delete($this->table)
                 ->where('id = :id')
                 ->setParameter('id', $entity->id)
                 ->executeStatement();

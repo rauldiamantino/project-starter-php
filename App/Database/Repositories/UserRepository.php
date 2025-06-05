@@ -18,7 +18,7 @@ class UserRepository extends Repository implements AuthInterface
 {
     protected string $table = 'users';
 
-    protected function createEntityFromData(array $data): Entity
+    protected function createEntityFromData(array $data): UserEntity
     {
         try {
             $userEntity = UserEntity::create($data);
@@ -31,7 +31,7 @@ class UserRepository extends Repository implements AuthInterface
         return $userEntity;
     }
 
-    public function getUserById(int $id): Entity
+    public function getUserById(int $id): UserEntity
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
@@ -75,7 +75,7 @@ class UserRepository extends Repository implements AuthInterface
         }
     }
 
-    public function create(UserEntity $entity): int
+    public function create(UserEntity $entity): UserEntity
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
@@ -99,7 +99,18 @@ class UserRepository extends Repository implements AuthInterface
                 throw new RuntimeException('Failed to insert the user record into the database');
             }
 
-            return (int) $this->connection->lastInsertId();
+            $insertedId = (int) $this->connection->lastInsertId();
+
+            $entityData = [
+                'id' => $insertedId,
+                'name' => $entity->name,
+                'email' => $entity->email,
+                'password' => $entity->password,
+                'companyId' => $entity->companyId,
+                'level' => $entity->level,
+            ];
+
+            return UserEntity::create($entityData);
         } catch (DBALException $e) {
             $this->logger->error('DBAL Error in User::create: ' . $e->getMessage(), [
                 'table' => $this->table,
@@ -181,7 +192,7 @@ class UserRepository extends Repository implements AuthInterface
         }
     }
 
-    public function auth(string $email): Entity
+    public function auth(string $email): UserEntity
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
@@ -195,7 +206,8 @@ class UserRepository extends Repository implements AuthInterface
                 'level'
             )
                 ->from('users')
-                ->where('email = ' . $queryBuilder->createNamedParameter($email))
+                ->where('email = :email')
+                ->setParameter('email', $email)
                 ->fetchAssociative();
 
             if ($selected === false || empty($selected)) {

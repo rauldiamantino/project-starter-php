@@ -61,7 +61,7 @@ class UserController extends Controller
     public function store(): Response
     {
         if (!UserCreateFormRequest::validate($this->request)) {
-            return $this->redirect('/user/create');
+            return $this->redirect('/users/create');
         }
 
         try {
@@ -71,7 +71,7 @@ class UserController extends Controller
 
             return $this->redirect('/users', 'success', 'Created successfully!');
         } catch (EmailAlreadyExistsException $e) {
-            return $this->redirect('/user/create', 'error', $e->getMessage());
+            return $this->redirect('/users/create', 'error', $e->getMessage());
         } catch (Throwable $e) {
             $this->logger->error('Unexpected error in UserController::store: ' . $e->getMessage());
 

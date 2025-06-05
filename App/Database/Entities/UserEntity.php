@@ -25,15 +25,44 @@ class UserEntity extends Entity
             throw new InvalidArgumentException('Invalid properties provided to create UserEntity.');
         }
 
+        $id = $properties['id'] ?? null;
+        $name = trim($properties['name'] ?? '');
+        $email = strtolower(trim($properties['email'] ?? ''));
+        $companyId = (int) ($properties['company_id'] ?? 0);
+        $password = $properties['password'] ?? '';
+        $level = (int) ($properties['level'] ?? 0);
+        $createdAt = $properties['created_at'] ?? null;
+        $updatedAt = $properties['updated_at'] ?? null;
+
+        if (empty($name)) {
+            throw new InvalidArgumentException('User name cannot be empty.');
+        }
+
+        if (empty($email)) {
+            throw new InvalidArgumentException('User email cannot be empty.');
+        }
+
+        if (empty($companyId)) {
+            throw new InvalidArgumentException('Company ID cannot be empty.');
+        }
+
+        if (empty($password)) {
+            throw new InvalidArgumentException('User password cannot be empty.');
+        }
+
+        if ($level <= 0) {
+            throw new InvalidArgumentException('User level must be a positive integer.');
+        }
+
         return new self(
-            id: $properties['id'] ?? null,
-            name: trim($properties['name'] ?? ''),
-            email: strtolower(trim($properties['email'] ?? '')),
-            companyId: (int) ($properties['company_id'] ?? 0),
-            password: $properties['password'] ?? '',
-            level: (int) ($properties['level'] ?? 0),
-            createdAt: $properties['created_at'] ?? null,
-            updatedAt: $properties['updated_at'] ?? null,
+            id: $id,
+            name: $name,
+            email: $email,
+            companyId: $companyId,
+            password: $password,
+            level: $level,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
         );
     }
 }

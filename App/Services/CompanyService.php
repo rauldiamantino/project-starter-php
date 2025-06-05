@@ -23,7 +23,7 @@ class CompanyService
 
     }
 
-    public function createCompany(array $companyData): Entity
+    public function createCompany(array $companyData): CompanyEntity
     {
         $name = $companyData['name'];
         $cnpj = onlyNumbers($companyData['cnpj']);

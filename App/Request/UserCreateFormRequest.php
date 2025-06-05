@@ -3,9 +3,8 @@
 namespace App\Request;
 
 use Core\Request\FormRequest;
-
-use Respect\Validation\Rules\Key;
 use Respect\Validation\Validator;
+use Respect\Validation\Rules\Key;
 use Respect\Validation\Rules\AllOf;
 
 class UserCreateFormRequest extends FormRequest
@@ -15,29 +14,32 @@ class UserCreateFormRequest extends FormRequest
         $validate = new Validator();
 
         $validate->addRule(
-            new Key('name', Validator::notEmpty()->setTemplate('Field required')),
+            new Key('name', Validator::notEmpty()->setTemplate('The name field is required.'), true),
         );
 
         $validate->addRule(
             new Key('email', new AllOf(
-                Validator::email()->setTemplate('Field must have a valid email'),
-                Validator::notEmpty()->setTemplate('Field required'),
-            )),
+                Validator::email()->setTemplate('The email field must be a valid email address.'),
+                Validator::notEmpty()->setTemplate('The email field is required.'),
+            ), true)
         );
 
         $validate->addRule(
             new Key('password', new AllOf(
-                Validator::notEmpty()->setTemplate('Field required'),
-                Validator::length(5, null)->setTemplate('Field requires at least 5 characters'),
-            )),
+                Validator::length(5, null)->setTemplate('The password field requires at least 5 characters.'),
+                Validator::notEmpty()->setTemplate('The password field is required.'),
+            ), true)
         );
 
         $validate->addRule(
-            new Key('company_id', Validator::notEmpty()->setTemplate('Field required')),
+            new Key('company_id', Validator::notEmpty()->setTemplate('Company ID field is required.'), true),
         );
 
         $validate->addRule(
-            new Key('level', Validator::notEmpty()->setTemplate('Field required')),
+            new Key('level', new AllOf(
+                Validator::in([1, 2, 3])->setTemplate('The selected level is invalid.'),
+                Validator::notEmpty()->setTemplate('The level field is required.'),
+            ), true)
         );
 
         return $this->isValidated($validate);
