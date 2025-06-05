@@ -2,8 +2,6 @@
 
 namespace App\Database\Repositories;
 
-use App\Database\Entities\UserEntity;
-
 use Core\Dbal\Entity;
 use Core\Dbal\Repository;
 use Core\Dbal\AuthInterface;
@@ -14,6 +12,8 @@ use InvalidArgumentException;
 use RuntimeException;
 use Doctrine\DBAL\Exception as DBALException;
 
+use App\Database\Entities\UserEntity;
+
 class UserRepository extends Repository implements AuthInterface
 {
     protected string $table = 'users';
@@ -23,13 +23,7 @@ class UserRepository extends Repository implements AuthInterface
         try {
             $userEntity = UserEntity::create($data);
         } catch (InvalidArgumentException $e) {
-            $this->logger->error(
-                'Invalid data from database for UserEntity: ' . $e->getMessage(),
-                [
-                    'data' => $data,
-                    'exception' => $e->getTraceAsString(),
-                ],
-            );
+            $this->logger->error('Invalid data from database for UserEntity: ' . $e->getMessage(), ['data' => $data]);
 
             throw new RuntimeException('Internal failure: Corrupted data received from database for UserEntity.', 0, $e);
         }
@@ -71,23 +65,11 @@ class UserRepository extends Repository implements AuthInterface
 
             return $userEntity;
         } catch (DBALException $e) {
-            $this->logger->error(
-                'DBAL Error in User::getUserById: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                ],
-            );
+            $this->logger->error('DBAL Error in User::getUserById: ' . $e->getMessage(), ['table' => $this->table]);
 
             throw new RuntimeException("Database error while fetching user with ID '{$id}'.", 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical(
-                'PDO Error in User::getUserById: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                ],
-            );
+            $this->logger->critical('PDO Error in User::getUserById: ' . $e->getMessage(), ['table' => $this->table]);
 
             throw new RuntimeException("Database connection error while fetching user with ID '{$id}'.", 0, $e);
         }
@@ -112,35 +94,24 @@ class UserRepository extends Repository implements AuthInterface
                 ->executeStatement();
 
             if ($result === 0) {
-                $this->logger->error(
-                    'Failed to insert the user record into the database, 0 rows affected.',
-                    ['email' => $entity->email],
-                );
+                $this->logger->error('Failed to insert the user record into the database, 0 rows affected.', ['email' => $entity->email]);
 
                 throw new RuntimeException('Failed to insert the user record into the database');
             }
 
             return (int) $this->connection->lastInsertId();
         } catch (DBALException $e) {
-            $this->logger->error(
-                'DBAL Error in User::create: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'email' => $entity->email,
-                ],
-            );
+            $this->logger->error('DBAL Error in User::create: ' . $e->getMessage(), [
+                'table' => $this->table,
+                'email' => $entity->email,
+            ]);
 
             throw new RuntimeException('Database error while creating user. Please try again', 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical(
-                'PDO Error in User::create: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'email' => $entity->email,
-                ],
-            );
+            $this->logger->critical('PDO Error in User::create: ' . $e->getMessage(), [
+                'table' => $this->table,
+                'email' => $entity->email,
+            ]);
 
             throw new RuntimeException('Database connection error while creating user', 0, $e);
         }
@@ -159,25 +130,18 @@ class UserRepository extends Repository implements AuthInterface
 
             return (int) $count > 0;
         } catch (DBALException $e) {
-            $this->logger->error(
-                'DBAL Error in User::emailExists: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'email' => $email,
-                ],
+            $this->logger->error('DBAL Error in User::emailExists: ' . $e->getMessage(), [
+                'table' => $this->table,
+                'email' => $email,
+              ],
             );
 
             throw new RuntimeException('Database error while checking email', 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical(
-                'PDO Error in User::emailExists: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'email' => $email,
-                ],
-            );
+            $this->logger->critical('PDO Error in User::emailExists: ' . $e->getMessage(), [
+                'table' => $this->table,
+                'email' => $email,
+            ]);
 
             throw new RuntimeException('Database connection error when checking email', 0, $e);
         }
@@ -201,25 +165,17 @@ class UserRepository extends Repository implements AuthInterface
 
             return $deletedRows;
         } catch (DBALException $e) {
-            $this->logger->error(
-                'DBAL Error deleting user with ID ' . $entity->id . ': ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'id' => $entity->id,
-                ],
-            );
+            $this->logger->error('DBAL Error deleting user with ID ' . $entity->id . ': ' . $e->getMessage(), [
+                'table' => $this->table,
+                'id' => $entity->id,
+            ]);
 
             throw new RuntimeException('Database error during user deletion.', 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical(
-                'PDO Error deleting user with ID ' . $entity->id . ': ' . $e->getMessage(),
-                [
-                  'exception' => $e->getTraceAsString(),
-                  'table' => $this->table,
-                  'id' => $entity->id,
-              ],
-            );
+            $this->logger->critical('PDO Error deleting user with ID ' . $entity->id . ': ' . $e->getMessage(), [
+                'table' => $this->table,
+                'id' => $entity->id,
+            ]);
 
             throw new RuntimeException('Database connection error during user deletion.', 0, $e);
         }
@@ -250,25 +206,17 @@ class UserRepository extends Repository implements AuthInterface
 
             return $this->createEntityFromData($selected);
         } catch (DBALException $e) {
-            $this->logger->error(
-                'DBAL Error in UserRepository::auth: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'email' => $email,
-                ],
-            );
+            $this->logger->error('DBAL Error in UserRepository::auth: ' . $e->getMessage(), [
+                'table' => $this->table,
+                'email' => $email,
+            ]);
 
             throw new RuntimeException("Database error during authentication for email '{$email}'.", 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical(
-                'PDO Error in UserRepository::auth: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'email' => $email,
-                ],
-            );
+            $this->logger->critical('PDO Error in UserRepository::auth: ' . $e->getMessage(), [
+                'table' => $this->table,
+                'email' => $email,
+            ]);
 
             throw new RuntimeException("Database connection error during authentication for email '{$email}'.", 0, $e);
         }

@@ -4,6 +4,7 @@ namespace Core\Request;
 
 use Core\Library\Request;
 use Core\Library\Session;
+
 use Respect\Validation\Validator;
 use Respect\Validation\Exceptions\NestedValidationException;
 
@@ -11,7 +12,7 @@ abstract class FormRequest
 {
     protected Request $request;
 
-    public function is_validated(Validator $validate): bool
+    public function isValidated(Validator $validate): bool
     {
         try {
             $validate->assert($this->request->post);

@@ -3,19 +3,17 @@
 namespace App\Services;
 
 use Core\Dbal\Entity;
-use RuntimeException;
+use Core\Dbal\Exceptions\EntityNotFoundException;
+
 use App\Database\Entities\UserEntity;
 use App\Database\Repositories\UserRepository;
 use App\Exceptions\EmailAlreadyExistsException;
-use Core\Dbal\Exceptions\EntityNotFoundException;
+use RuntimeException;
 
 class UserService
 {
-    private UserRepository $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct(private UserRepository $userRepository)
     {
-        $this->userRepository = $userRepository;
     }
 
     public function createUser(array $userData): Entity

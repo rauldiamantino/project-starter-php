@@ -11,35 +11,35 @@
       <div>
         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
         <input type="text" id="name" name="name" placeholder="Your Name" value="Raul" class="p-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-        {{ flash('name') | raw }}
+        {{ flash_form('name') | raw }}
       </div>
 
       <div>
         <label for="email" class="block text-sm font-medium text-gray-700">Your Email</label>
         <input type="text" id="email" name="email" placeholder="Your Email" value="rauldiamantino25@gmail.com" class="p-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-        {{ flash('email') | raw }}
+        {{ flash_form('email') | raw }}
       </div>
 
       <div>
         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
         <input type="password" id="password" name="password" placeholder="Your Password" value="123" class="p-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-        {{ flash('password') | raw }}
+        {{ flash_form('password') | raw }}
       </div>
 
       <div>
         <label for="company_id" class="block text-sm font-medium text-gray-700">Company ID</label>
         <input type="text" id="company_id" name="company_id" placeholder="Your Company ID" value="1" class="p-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-        {{ flash('company_id') | raw }}
+        {{ flash_form('company_id') | raw }}
       </div>
 
       <div>
         <label for="level" class="block text-sm font-medium text-gray-700">Level</label>
         <input type="text" id="level" name="level" placeholder="Your Level" value="1" class="p-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-        {{ flash('level') | raw }}
+        {{ flash_form('level') | raw }}
       </div>
 
       <div>
-        <button type="submit" class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-sm transition">
+        <button type="submit" class="cursor-pointer w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-sm transition">
           Create
         </button>
       </div>

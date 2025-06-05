@@ -41,23 +41,11 @@ abstract class Repository
             return $entities;
 
         } catch (DBALException $e) {
-            $this->logger->error(
-                'DBAL Error in Repository::getAll: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                ],
-            );
+            $this->logger->error('DBAL Error in Repository::getAll: ' . $e->getMessage(), ['table' => $this->table]);
 
             throw new RuntimeException('Database error while fetching all records.', 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical(
-                'PDO Error in Repository::getAll: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                ],
-            );
+            $this->logger->critical('PDO Error in Repository::getAll: ' . $e->getMessage(), ['table' => $this->table]);
 
             throw new RuntimeException('Database connection error while fetching all records.', 0, $e);
         }

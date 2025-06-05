@@ -2,14 +2,17 @@
 
 namespace Core\Library;
 
+use Core\Library\Request;
+use Core\Library\Response;
+use Core\Library\Controller;
+
 use Closure;
 use Exception;
 use DI\Container;
-use Core\Library\Request;
+
 use FastRoute\Dispatcher;
-use Core\Library\Response;
-use Core\Library\Controller;
 use FastRoute\RouteCollector;
+
 use App\Controllers\NotFoundController;
 use App\Controllers\MethodNotAllowedController;
 

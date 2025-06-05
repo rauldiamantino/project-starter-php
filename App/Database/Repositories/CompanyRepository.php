@@ -2,8 +2,6 @@
 
 namespace App\Database\Repositories;
 
-use App\Database\Entities\CompanyEntity;
-
 use Core\Dbal\Entity;
 use Core\Dbal\Repository;
 use Core\Dbal\exceptions\EntityNotFoundException;
@@ -12,6 +10,8 @@ use PDOException;
 use InvalidArgumentException;
 use RuntimeException;
 use Doctrine\DBAL\Exception as DBALException;
+
+use App\Database\Entities\CompanyEntity;
 
 class CompanyRepository extends Repository
 {
@@ -22,13 +22,7 @@ class CompanyRepository extends Repository
         try {
             $companyEntity = CompanyEntity::create($data);
         } catch (InvalidArgumentException $e) {
-            $this->logger->error(
-                'Invalid data from database for CompanyEntity: ' . $e->getMessage(),
-                [
-                    'data' => $data,
-                    'expection' => $e->getTraceAsString(),
-                ],
-            );
+            $this->logger->error('Invalid data from database for CompanyEntity: ' . $e->getMessage(), ['data' => $data]);
 
             throw new RuntimeException('Internal failure: Corrupted data received from database for CompanyEntity.', 0, $e);
         }
@@ -64,23 +58,11 @@ class CompanyRepository extends Repository
 
             return $companyEntity;
         } catch (DBALException $e) {
-            $this->logger->error(
-                'DBAL Error in Company::getCompanyById: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                ],
-            );
+            $this->logger->error('DBAL Error in Company::getCompanyById: ' . $e->getMessage(), ['table' => $this->table]);
 
             throw new RuntimeException("Database error while fetching company with ID '{$id}'.", 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical(
-                'PDO Error in Company::getCompanyById: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                ],
-            );
+            $this->logger->critical('PDO Error in Company::getCompanyById: ' . $e->getMessage(), ['table' => $this->table]);
 
             throw new RuntimeException("Database connection error while fetching company with ID '{$id}'.", 0, $e);
         }
@@ -101,10 +83,7 @@ class CompanyRepository extends Repository
                 ->executeStatement();
 
             if ($result === 0) {
-                $this->logger->error(
-                    'Failed to insert the company record into the database, 0 rows affected.',
-                    ['name' => $entity->name],
-                );
+                $this->logger->error('Failed to insert the company record into the database.', ['name' => $entity->name]);
 
                 throw new RuntimeException('Failed to insert the company record into the database');
             }
@@ -122,14 +101,10 @@ class CompanyRepository extends Repository
 
             throw new RuntimeException('Database error while creating company. Please try again', 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical(
-                'PDO Error in Company::create: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'name' => $entity->name,
-                ]
-            );
+            $this->logger->critical('PDO Error in Company::create: ' . $e->getMessage(), [
+                'table' => $this->table, 
+                'name' => $entity->name,
+              ]);
 
             throw new RuntimeException('Database connection error while creating company', 0, $e);
         }
@@ -140,7 +115,7 @@ class CompanyRepository extends Repository
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
 
-            $count = $queryBuilder->select('COUNT(id')
+            $count = $queryBuilder->select('COUNT(id)')
                 ->from($this->table)
                 ->where('cnpj = :cnpj')
                 ->setParameter('cnpj', $cnpj)
@@ -148,25 +123,17 @@ class CompanyRepository extends Repository
 
             return (int) $count > 0;
         } catch (DBALException $e) {
-            $this->logger->error(
-                'DBAL Error in Company::cnpjExists: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'cnpj' => $cnpj,
-                ],
-            );
+            $this->logger->error('DBAL Error in Company::cnpjExists: ' . $e->getMessage(), [
+                'table' => $this->table,
+                'cnpj' => $cnpj,
+            ]);
 
             throw new RuntimeException('Database error while checking cnpj', 0, $e);
         } catch (PDOException $e) {
-            $this->logger->error(
-                'PDO Error in Company::cnpjExists: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'cnpj' => $cnpj,
-                ],
-            );
+            $this->logger->error('PDO Error in Company::cnpjExists: ' . $e->getMessage(), [
+                'table' => $this->table,
+                'cnpj' => $cnpj,
+            ]);
 
             throw new RuntimeException('Database connection error when checking cnpj', 0, $e);
         }
@@ -177,7 +144,7 @@ class CompanyRepository extends Repository
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
 
-            $count = $queryBuilder->select('COUNT(id')
+            $count = $queryBuilder->select('COUNT(id)')
                 ->from($this->table)
                 ->where('name = :name')
                 ->setParameter('name', $name)
@@ -185,27 +152,42 @@ class CompanyRepository extends Repository
 
             return (int) $count > 0;
         } catch (DBALException $e) {
-            $this->logger->error(
-                'DBAL Error in Company::nameExists: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'name' => $name,
-                ],
-            );
+            $this->logger->error('DBAL Error in Company::nameExists: ' . $e->getMessage(), [
+                'table' => $this->table,
+                'name' => $name,
+            ]);
 
             throw new RuntimeException('Database error while checking name', 0, $e);
         } catch (PDOException $e) {
-            $this->logger->error(
-                'PDO Error in Company::nameExists: ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'name' => $name,
-                ],
-            );
+            $this->logger->error('PDO Error in Company::nameExists: ' . $e->getMessage(), [
+                'table' => $this->table,
+                'name' => $name,
+            ]);
 
             throw new RuntimeException('Database connection error when checking name', 0, $e);
+        }
+    }
+
+    public function slugExists(string $slug): bool
+    {
+        try {
+            $queryBuilder = $this->connection->createQueryBuilder();
+
+            $count = $queryBuilder->select('COUNT(id)')
+                ->from($this->table)
+                ->where('slug = :slug')
+                ->setParameter('slug', $slug)
+                ->fetchOne();
+
+            return $count > 0;
+        } catch (DBALException $e) {
+            $this->logger->error('DBAL Error in Company::slugExists: ' . $e->getMessage(), ['slug' => $slug]);
+
+            throw new RuntimeException('Database error while checking slug existence.', 0, $e);
+        } catch (PDOException $e) {
+            $this->logger->critical('PDO Error in Company::slugExists: ' . $e->getMessage(), ['slug' => $slug]);
+
+            throw new RuntimeException('Database connection error while checking slug existence.', 0, $e);
         }
     }
 
@@ -220,32 +202,24 @@ class CompanyRepository extends Repository
                 ->executeStatement();
 
             if ($deletedRows === 0) {
-                $this->logger->warning("Attempted to delete company with ID '{$entity->id}' but no rows were affected. Company might not exist or already deleted.");
+                $this->logger->warning("Attempted to delete company with ID '{$entity->id}' but no rows were affected.");
             } else {
                 $this->logger->info("User with ID '{$entity->id}' deleted successfully. Affected rows: {$deletedRows}.");
             }
 
             return $deletedRows;
         } catch (DBALException $e) {
-            $this->logger->error(
-                'DBAL Error deleting company with ID ' . $entity->id . ': ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'id' => $entity->id,
-                ],
-            );
+            $this->logger->error('DBAL Error deleting company with ID ' . $entity->id . ': ' . $e->getMessage(), [
+                'table' => $this->table,
+                'id' => $entity->id,
+            ]);
 
             throw new RuntimeException('Database error during company deletion.', 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical(
-                'PDO Error deleting company with ID ' . $entity->id . ': ' . $e->getMessage(),
-                [
-                    'exception' => $e->getTraceAsString(),
-                    'table' => $this->table,
-                    'id' => $entity->id,
-                ],
-            );
+            $this->logger->critical('PDO Error deleting company with ID ' . $entity->id . ': ' . $e->getMessage(), [
+                'table' => $this->table,
+                'id' => $entity->id,
+            ]);
 
             throw new RuntimeException('Database error during company deletion.', 0, $e);
         }

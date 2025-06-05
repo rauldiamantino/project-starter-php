@@ -2,15 +2,15 @@
 
 namespace App\Controllers;
 
-use Throwable;
 use Core\Library\Twig;
 use Core\Library\Logger;
 use Core\Library\Response;
 use Core\Library\Controller;
-use App\Services\UserService;
-
-use App\Request\UserCreateFormRequest;
 use Core\Dbal\Exceptions\EntityNotFoundException;
+use Throwable;
+
+use App\Services\UserService;
+use App\Request\UserCreateFormRequest;
 use App\Database\Repositories\UserRepository;
 use App\Exceptions\EmailAlreadyExistsException;
 
@@ -22,7 +22,7 @@ class UserController extends Controller
         private UserRepository $userRepository,
         private UserService $userService,
     ) {
-        parent::__construct($twig);
+        parent::__construct($twig, folderView: 'User');
     }
 
     public function index(): Response
@@ -30,9 +30,9 @@ class UserController extends Controller
         try {
             $users = $this->userRepository->getAll();
 
-            return $this->render('users/index.twig', ['users' => $users]);
+            return $this->render('index.twig', ['users' => $users]);
         } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in UserController::index: ' . $e->getMessage(), ['exception' => $e->getTraceAsString()]);
+            $this->logger->error('Unexpected error in UserController::index: ' . $e->getMessage());
 
             return $this->redirect('/', 'error', 'An unexpected error occurred while loading users.');
         }
@@ -43,11 +43,11 @@ class UserController extends Controller
         try {
             $user = $this->userRepository->getUserById($id);
 
-            return $this->render('users/show.twig', ['user' => $user]);
+            return $this->render('show.twig', ['user' => $user]);
         } catch (EntityNotFoundException $e) {
             return $this->redirect('/users', 'error', $e->getMessage());
         } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in UserController::show: ' . $e->getMessage(), ['exception' => $e->getTraceAsString()]);
+            $this->logger->error('Unexpected error in UserController::show: ' . $e->getMessage());
 
             return $this->redirect('/users', 'error', 'An unexpected error occurred');
         }
@@ -55,7 +55,7 @@ class UserController extends Controller
 
     public function create(): Response
     {
-        return $this->render('users/create.twig');
+        return $this->render('create.twig');
     }
 
     public function store(): Response
@@ -73,9 +73,7 @@ class UserController extends Controller
         } catch (EmailAlreadyExistsException $e) {
             return $this->redirect('/user/create', 'error', $e->getMessage());
         } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in UserController::store: ' . $e->getMessage(), [
-              'exception' => $e->getTraceAsString(), 'file' => $e->getFile(), 'line' => $e->getLine(),
-            ]);
+            $this->logger->error('Unexpected error in UserController::store: ' . $e->getMessage());
 
             return $this->redirect('/users', 'error', 'An unexpected error occurred during user creation.');
         }
@@ -91,7 +89,7 @@ class UserController extends Controller
         } catch (EntityNotFoundException $e) {
             return $this->redirect('/users', 'error', $e->getMessage());
         } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in UserController::delete: ' . $e->getMessage(), ['exception' => $e->getTraceAsString()]);
+            $this->logger->error('Unexpected error in UserController::delete: ' . $e->getMessage());
 
             return $this->redirect('/users', 'error', 'An unexpected error occurred during user deletion.');
         }

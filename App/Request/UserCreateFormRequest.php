@@ -3,6 +3,7 @@
 namespace App\Request;
 
 use Core\Request\FormRequest;
+
 use Respect\Validation\Rules\Key;
 use Respect\Validation\Validator;
 use Respect\Validation\Rules\AllOf;
@@ -39,6 +40,6 @@ class UserCreateFormRequest extends FormRequest
             new Key('level', Validator::notEmpty()->setTemplate('Field required')),
         );
 
-        return $this->is_validated($validate);
+        return $this->isValidated($validate);
     }
 }
