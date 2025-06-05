@@ -2,11 +2,14 @@
 
 namespace Core\Dbal;
 
-use PDOException;
 use Core\Dbal\Entity;
 use Core\Library\Logger;
-use RuntimeException;
+
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception as DBALException;
+
+use PDOException;
+use RuntimeException;
 
 abstract class Repository
 {

@@ -3,7 +3,7 @@
 namespace Core\Library;
 
 use Core\Library\Session;
-use Core\Dbal\Exceptions\EntityNotFound;
+use Core\Dbal\Exceptions\EntityNotFoundException;
 use App\Database\Repositories\UserRepository;
 
 class Auth
@@ -12,12 +12,12 @@ class Auth
     {
     }
 
-    public function attempt(array $data)
+    public function attempt(array $data): bool
     {
         /** @var UserEntity $user */
         $user = $this->userRepository->auth($data['email']);
 
-        if ($user instanceof EntityNotFound) {
+        if ($user instanceof EntityNotFoundException) {
             return false;
         }
 

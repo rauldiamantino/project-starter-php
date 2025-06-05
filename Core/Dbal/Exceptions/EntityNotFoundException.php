@@ -4,6 +4,6 @@ namespace Core\Dbal\exceptions;
 
 use Exception;
 
-class EntityNotFound extends Exception
+class EntityNotFoundException extends Exception
 {
 }

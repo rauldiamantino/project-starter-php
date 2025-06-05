@@ -4,14 +4,15 @@ namespace App\Controllers;
 
 use Throwable;
 use Core\Library\Twig;
+use Core\Library\Logger;
 use Core\Library\Response;
 use Core\Library\Controller;
-use Core\Dbal\Exceptions\EntityNotFound;
-use Core\Library\Logger;
-
 use App\Services\UserService;
+
 use App\Request\UserCreateFormRequest;
+use Core\Dbal\Exceptions\EntityNotFoundException;
 use App\Database\Repositories\UserRepository;
+use App\Exceptions\EmailAlreadyExistsException;
 
 class UserController extends Controller
 {
@@ -43,7 +44,7 @@ class UserController extends Controller
             $user = $this->userRepository->getUserById($id);
 
             return $this->render('users/show.twig', ['user' => $user]);
-        } catch (EntityNotFound $e) {
+        } catch (EntityNotFoundException $e) {
             return $this->redirect('/users', 'error', $e->getMessage());
         } catch (Throwable $e) {
             $this->logger->error('Unexpected error in UserController::show: ' . $e->getMessage(), ['exception' => $e->getTraceAsString()]);
@@ -87,7 +88,7 @@ class UserController extends Controller
             $this->userRepository->delete($user);
 
             return $this->redirect('/users', 'success', 'Deleted successfully');
-        } catch (EntityNotFound $e) {
+        } catch (EntityNotFoundException $e) {
             return $this->redirect('/users', 'error', $e->getMessage());
         } catch (Throwable $e) {
             $this->logger->error('Unexpected error in UserController::delete: ' . $e->getMessage(), ['exception' => $e->getTraceAsString()]);

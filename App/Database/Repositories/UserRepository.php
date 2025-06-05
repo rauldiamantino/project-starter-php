@@ -2,12 +2,17 @@
 
 namespace App\Database\Repositories;
 
-use Core\Dbal\Entity;
-use RuntimeException;
-use Core\Dbal\AuthInterface;
 use App\Database\Entities\UserEntity;
-use Core\Dbal\Exceptions\EntityNotFound;
+
+use Core\Dbal\Entity;
 use Core\Dbal\Repository;
+use Core\Dbal\AuthInterface;
+use Core\Dbal\Exceptions\EntityNotFoundException;
+
+use PDOException;
+use InvalidArgumentException;
+use RuntimeException;
+use Doctrine\DBAL\Exception as DBALException;
 
 class UserRepository extends Repository implements AuthInterface
 {
@@ -23,7 +28,7 @@ class UserRepository extends Repository implements AuthInterface
                 [
                     'data' => $data,
                     'exception' => $e->getTraceAsString(),
-                ]
+                ],
             );
 
             throw new RuntimeException('Internal failure: Corrupted data received from database for UserEntity.', 0, $e);
@@ -55,12 +60,12 @@ class UserRepository extends Repository implements AuthInterface
             if ($selected === false || empty($selected)) {
                 $this->logger->info("User with ID '{$id}' not found in database.");
 
-                throw new EntityNotFound("User with ID '{$id}' not found.");
+                throw new EntityNotFoundException("User with ID '{$id}' not found.");
             }
 
             $userEntity = $this->createEntityFromData($selected);
 
-            if ($userEntity instanceof EntityNotFound) {
+            if ($userEntity instanceof EntityNotFoundException) {
                 throw new RuntimeException("Failed to create UserEntity from fetched data for ID '{$id}'.");
             }
 
@@ -240,7 +245,7 @@ class UserRepository extends Repository implements AuthInterface
             if ($selected === false || empty($selected)) {
                 $this->logger->info("Authentication attempt for email '{$email}' failed: User not found.");
 
-                throw new EntityNotFound("User with email '{$email}' not found.");
+                throw new EntityNotFoundException("User with email '{$email}' not found.");
             }
 
             return $this->createEntityFromData($selected);

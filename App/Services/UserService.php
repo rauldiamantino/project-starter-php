@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
+use Core\Dbal\Entity;
 use RuntimeException;
-use App\Database\Repositories\UserRepository;
 use App\Database\Entities\UserEntity;
-use Core\Dbal\Exceptions\EntityNotFound;
+use App\Database\Repositories\UserRepository;
 use App\Exceptions\EmailAlreadyExistsException;
+use Core\Dbal\Exceptions\EntityNotFoundException;
 
 class UserService
 {
@@ -35,7 +36,7 @@ class UserService
 
         $entity = UserEntity::create($data);
 
-        if ($entity instanceof EntityNotFound) {
+        if ($entity instanceof EntityNotFoundException) {
             throw new RuntimeException('Internal error: could not create user entity');
         }
 
