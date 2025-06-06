@@ -39,7 +39,7 @@ class ArticleEntity extends Entity
         $viewsCount = (int) ($properties['views_id'] ?? 0);
         $ordering = (int) ($properties['ordering'] ?? 0);
         $createdAt = $properties['created_at'] ? null;
-        $updatedAt = $properties['created_at'] ? null;
+        $updatedAt = $properties['updated_at'] ? null;
 
         if (empty($title)) {
             throw new InvalidArgumentException('Article title cannot be empty.');

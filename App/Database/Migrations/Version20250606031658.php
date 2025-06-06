@@ -18,7 +18,7 @@ final class Version20250606031658 extends AbstractMigration
     {
         $this->addSql('CREATE TABLE users (
             id INT AUTO_INCREMENT NOT NULL,
-            is_active TINYINT(1) NOT NULL DEFAULT 1,
+            is_active TINYINT(1) NOT NULL DEFAULT 0,
             level TINYINT(1) NOT NULL DEFAULT 0,
             company_id INT DEFAULT NULL,
             name VARCHAR(255) NOT NULL,
