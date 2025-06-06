@@ -10,9 +10,11 @@ use Core\Library\Controller;
 
 use App\Services\CompanyService;
 use App\Request\CompanyCreateFormRequest;
+use App\Exceptions\CompanyNotExistsException;
 use App\Exceptions\CnpjAlreadyExistsException;
 use App\Exceptions\NameAlreadyExistsException;
 use App\Database\Repositories\CompanyRepository;
+use App\Exceptions\CompanyHasDependentsException;
 
 class CompanyController extends Controller
 {
@@ -47,7 +49,7 @@ class CompanyController extends Controller
         } catch (Throwable $e) {
             $this->logger->error('Unexpected error in CompanyController::show: ' . $e->getMessage());
 
-          return $this->redirect('/', 'error', 'An unexptected error occurred while loading company.');
+            return $this->redirect('/', 'error', 'An unexptected error occurred while loading company.');
         }
     }
 
@@ -68,7 +70,6 @@ class CompanyController extends Controller
             $this->companyService->createCompany($request);
 
             return $this->redirect('/companies', 'success', 'Created successfully!');
-
         } catch (NameAlreadyExistsException | CnpjAlreadyExistsException $e) {
             return $this->redirect('/companies/create', 'error', $e->getMessage());
         } catch (Throwable $e) {
@@ -78,8 +79,22 @@ class CompanyController extends Controller
         }
     }
 
-    public function delete()
+    public function delete(int $id)
     {
+        try {
+            $this->companyService->deleteCompany($id);
 
+            return $this->redirect('/companies', 'success', 'Deleted successfully!');
+        } catch (CompanyNotExistsException $e) {
+
+            return $this->redirect('/companies', 'error', $e->getMessage());
+
+        } catch (CompanyHasDependentsException $e) {
+
+            return $this->redirect('/companies', 'error', $e->getMessage());
+        } catch (Throwable $e) {
+            $this->logger->error('Unexpected error in CompanyController::delete: ' . $e->getMessage());
+            return $this->redirect('/companies', 'error', 'An unexpected error occurred while deleting the company.');
+        }
     }
 }

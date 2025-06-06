@@ -4,10 +4,10 @@ namespace App\Exceptions;
 
 use RuntimeException;
 
-class NameAlreadyExistsException extends RuntimeException
+class CompanyHasDependentsException extends RuntimeException
 {
     public function __construct(
-        string $message = 'The email provided is already in use.',
+        string $message = 'It is not possible to delete the company because it has related data.',
         int $code = 409,
     ) {
         parent::__construct($message, $code);
