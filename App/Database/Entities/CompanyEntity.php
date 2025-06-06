@@ -25,7 +25,7 @@ class CompanyEntity extends Entity
         }
 
         $id = $properties['id'] ?? null;
-        $isActive = intval($properties['is_active'] ?? 0);
+        $isActive = (int) ($properties['is_active'] ?? 0);
         $name = trim($properties['name'] ?? '');
         $slug = strtolower(trim($properties['slug'] ?? ''));
         $cnpj = trim($properties['cnpj'] ?? '');

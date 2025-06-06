@@ -8,6 +8,7 @@ use InvalidArgumentException;
 class UserEntity extends Entity
 {
     public function __construct(
+        public readonly int $isActive,
         public readonly string $name,
         public readonly string $email,
         public readonly int $companyId,
@@ -26,6 +27,7 @@ class UserEntity extends Entity
         }
 
         $id = $properties['id'] ?? null;
+        $isActive = (int) ($properties['isActive'] ?? 0);
         $name = trim($properties['name'] ?? '');
         $email = strtolower(trim($properties['email'] ?? ''));
         $companyId = (int) ($properties['company_id'] ?? 0);
@@ -56,6 +58,7 @@ class UserEntity extends Entity
 
         return new self(
             id: $id,
+            isActive: $isActive,
             name: $name,
             email: $email,
             companyId: $companyId,
