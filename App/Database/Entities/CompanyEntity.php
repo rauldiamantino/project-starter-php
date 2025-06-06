@@ -8,9 +8,10 @@ use InvalidArgumentException;
 class CompanyEntity extends Entity
 {
     public function __construct(
-        public readonly string $name,
-        public readonly string $slug,
+        public readonly int $isActive,
         public readonly string $cnpj,
+        public readonly string $slug,
+        public readonly string $name,
         public readonly ?int $id = null,
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null
@@ -24,6 +25,7 @@ class CompanyEntity extends Entity
         }
 
         $id = $properties['id'] ?? null;
+        $isActive = intval($properties['is_active'] ?? 0);
         $name = trim($properties['name'] ?? '');
         $slug = strtolower(trim($properties['slug'] ?? ''));
         $cnpj = trim($properties['cnpj'] ?? '');
@@ -44,6 +46,7 @@ class CompanyEntity extends Entity
 
         return new static(
             id: $id,
+            isActive: $isActive,
             name: $name,
             slug: $slug,
             cnpj: $cnpj,
