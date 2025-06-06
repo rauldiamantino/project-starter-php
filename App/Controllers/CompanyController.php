@@ -59,7 +59,7 @@ class CompanyController extends Controller
     public function store()
     {
         if (!CompanyCreateFormRequest::validate($this->request)) {
-            return $this->redirect('/company/create');
+            return $this->redirect('/companies/create');
         }
 
         try {
@@ -70,7 +70,7 @@ class CompanyController extends Controller
             return $this->redirect('/companies', 'success', 'Created successfully!');
 
         } catch (NameAlreadyExistsException | CnpjAlreadyExistsException $e) {
-            return $this->redirect('/company/create', 'error', $e->getMessage());
+            return $this->redirect('/companies/create', 'error', $e->getMessage());
         } catch (Throwable $e) {
             $this->logger->error('Unexpected error in CompanyController::store: ' . $e->getMessage());
 

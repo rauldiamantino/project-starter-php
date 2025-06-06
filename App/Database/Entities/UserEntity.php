@@ -26,7 +26,7 @@ class UserEntity extends Entity
             throw new InvalidArgumentException('Invalid properties provided to create UserEntity.');
         }
 
-        $id = (int) $properties['id'] ?? null;
+        $id = $properties['id'] ?? null;
         $isActive = (int) ($properties['isActive'] ?? 0);
         $name = trim($properties['name'] ?? '');
         $email = strtolower(trim($properties['email'] ?? ''));

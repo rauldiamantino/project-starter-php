@@ -19,9 +19,7 @@ class CompanyService
     public function __construct(
         private CompanyRepository $companyRepository,
         private Logger $logger
-    ) {
-
-    }
+    ) {}
 
     public function createCompany(array $companyData): CompanyEntity
     {
@@ -49,16 +47,16 @@ class CompanyService
         }
 
         $data = [
-          'name' => $name,
-          'cnpj' => $cnpj,
-          'slug' => $finalSlug,
+            'name' => $name,
+            'cnpj' => $cnpj,
+            'slug' => $finalSlug,
         ];
 
         try {
             $entity = CompanyEntity::create($data);
         } catch (InvalidArgumentException $e) {
             $this->logger->error('Failed to create CompanyEntity due to invalid data: ' . $e->getMessage(), ['data' => $data]);
-            
+
             throw new RuntimeException('Internal error: invalid data provided for company entity creation.', 0, $e);
         }
 

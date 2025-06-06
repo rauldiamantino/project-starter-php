@@ -29,7 +29,7 @@ class ArticleEntity extends Entity
           throw new InvalidArgumentException('Invalid or empty properties array provided to create ArticleEntity.');
         }
 
-        $id = (int) $properties['id'] ?? null;
+        $id = $properties['id'] ?? null;
         $isActive = (int) ($properties['is_active'] ?? 0);
         $title = trim($properties['title'] ?? '');
         $slug = trim($properties['slug'] ?? '');
