@@ -60,12 +60,6 @@ class CompanyService
             throw new RuntimeException('Internal error: invalid data provided for company entity creation.', 0, $e);
         }
 
-        $insertedId = $this->companyRepository->create($entity);
-
-        if ($insertedId <= 0) {
-            throw new RuntimeException('Internal error when persisting company in database');
-        }
-
-        return $entity;
+        return $this->companyRepository->create($entity);
     }
 }
