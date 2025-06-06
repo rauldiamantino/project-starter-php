@@ -21,6 +21,7 @@
         "nikic/fast-route": "^1.3",
         "php-di/php-di": "^7.0",
         "twig/twig": "^3.21",
-        "respect/validation": "^2.4"
+        "respect/validation": "^2.4",
+        "doctrine/migrations": "^3.9"
     }
 }
