@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use Core\Dbal\Entity;
 use Core\Library\Logger;
 use Core\Utils\SlugGenerator;
 
