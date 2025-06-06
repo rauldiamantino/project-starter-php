@@ -20,7 +20,7 @@ final class Version20250606031906 extends AbstractMigration
             id INT AUTO_INCREMENT NOT NULL,
             article_id INT NOT NULL,
             is_active TINYINT(1) NOT NULL DEFAULT 1,
-            type VARCHAR(255) NOT NULL,
+            type TINYINT(1) NOT NULL DEFAULT 1,
             title VARCHAR(255) NOT NULL,
             hide_title TINYINT(1) NOT NULL DEFAULT 0,
             content LONGTEXT NOT NULL,

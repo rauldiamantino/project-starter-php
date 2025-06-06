@@ -21,6 +21,7 @@ final class Version20250606031753 extends AbstractMigration
             is_active TINYINT(1) NOT NULL DEFAULT 1,
             parent_id INT DEFAULT NULL,
             name VARCHAR(255) NOT NULL,
+            slug VARCHAR(255) NOT NULL,
             description TEXT DEFAULT NULL,
             company_id INT DEFAULT NULL,
             ordering INT DEFAULT 0 NOT NULL,
@@ -33,7 +34,7 @@ final class Version20250606031753 extends AbstractMigration
 
         $this->addSql('CREATE INDEX IDX_CATEGORIES_PARENT ON categories (parent_id)');
         $this->addSql('CREATE INDEX IDX_CATEGORIES_COMPANY ON categories (company_id)');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_CATEGORIES_NAME_COMPANY_PARENT ON categories (name, company_id, parent_id)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_CATEGORIES_SLUG_NAME_COMPANY_PARENT ON categories (slug, name, company_id, parent_id)');
     }
 
     public function down(Schema $schema): void

@@ -26,7 +26,7 @@ class CategoryEntity extends Entity
             throw new InvalidArgumentException('Invalid or empty properties array provided to create CategoryEntity.');
         }
 
-        $id = $properties['id'] ?? null;
+        $id = (int) $properties['id'] ?? null;
         $isActive = (int) ($properties['is_active'] ?? 0);
         $name = trim($properties['name'] ?? '');
         $description = trim($properties['description'] ?? '');
@@ -45,7 +45,7 @@ class CategoryEntity extends Entity
         }
 
         if (empty($companyId)) {
-            throw new InvalidArgumentException('Company ID cannot be empty.');
+            throw new InvalidArgumentException('Category companyId cannot be empty.');
         }
 
         return new static(

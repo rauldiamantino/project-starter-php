@@ -24,7 +24,7 @@ class CompanyEntity extends Entity
             throw new InvalidArgumentException('Invalid or empty properties array provided to create CompanyEntity.');
         }
 
-        $id = $properties['id'] ?? null;
+        $id = (int) $properties['id'] ?? null;
         $isActive = (int) ($properties['is_active'] ?? 0);
         $name = trim($properties['name'] ?? '');
         $slug = strtolower(trim($properties['slug'] ?? ''));

@@ -26,7 +26,7 @@ class UserEntity extends Entity
             throw new InvalidArgumentException('Invalid properties provided to create UserEntity.');
         }
 
-        $id = $properties['id'] ?? null;
+        $id = (int) $properties['id'] ?? null;
         $isActive = (int) ($properties['isActive'] ?? 0);
         $name = trim($properties['name'] ?? '');
         $email = strtolower(trim($properties['email'] ?? ''));
@@ -45,7 +45,7 @@ class UserEntity extends Entity
         }
 
         if (empty($companyId)) {
-            throw new InvalidArgumentException('Company ID cannot be empty.');
+            throw new InvalidArgumentException('User companyId cannot be empty.');
         }
 
         if (empty($password)) {
