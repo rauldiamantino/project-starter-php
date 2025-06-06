@@ -2,38 +2,37 @@
 
 {% block content %}
 
-<section class="flex justify-center items-center py-10 bg-gray-100 min-h-screen">
-  <div class="w-full max-w-xl bg-white shadow-lg rounded-xl p-8">
-    <h2 class="text-2xl font-semibold mb-6 text-gray-800">Create Company</h2>
+	<section class="flex justify-center items-center py-10 bg-gray-100 min-h-screen">
+		<div class="w-full max-w-xl bg-white shadow-lg rounded-xl p-8">
+			<h2 class="text-2xl font-semibold mb-6 text-gray-800">Create Company</h2>
 
-    <form method="post" action="/companies/store" class="space-y-6">
+			<form method="post" action="/companies/store" class="space-y-6">
 
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-        <input type="text" id="name" name="name" placeholder="Your Company Name" value="Company A" class="p-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-        {{ flash_form('name') | raw }}
-      </div>
+				<div>
+					<label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+					<input type="text" id="name" name="name" placeholder="Your Company Name" value="Company A" class="p-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"/>
+					{{ flash_form('name') | raw }}
+				</div>
 
-      <div>
-        <label for="cnpj" class="block text-sm font-medium text-gray-700">CNPJ</label>
-        <input type="text" id="cnpj" name="cnpj" placeholder="Your Company CNPJ" value="00.000.000/0000-00" class="p-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500" />
-        {{ flash_form('cnpj') | raw }}
-      </div>
+				<div>
+					<label for="cnpj" class="block text-sm font-medium text-gray-700">CNPJ</label>
+					<input type="text" id="cnpj" name="cnpj" placeholder="Your Company CNPJ" value="00.000.000/0000-00" class="p-2 mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"/>
+					{{ flash_form('cnpj') | raw }}
+				</div>
 
-      <div>
-        <button type="submit" class="cursor-pointer w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-sm transition">
-          Create
-        </button>
-      </div>
+				<div>
+					<button type="submit" class="cursor-pointer w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-sm transition">
+						Create
+					</button>
+				</div>
 
-    </form>
+			</form>
 
-    <div class="mt-8">
-      <a href="/" 
-        class="inline-block text-blue-600 hover:text-blue-800 font-semibold rounded-md border border-blue-600 px-4 py-2 transition">
-        &larr; Back to Home
-      </a>
-    </div>
-  </div>
-</section>
+			<div class="mt-8">
+				<a href="/" class="inline-block text-blue-600 hover:text-blue-800 font-semibold rounded-md border border-blue-600 px-4 py-2 transition">
+					&larr; Back to Home
+				</a>
+			</div>
+		</div>
+	</section>
 {% endblock %}
