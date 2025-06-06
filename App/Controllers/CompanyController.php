@@ -28,7 +28,7 @@ class CompanyController extends Controller
     public function index(): Response
     {
         try {
-            $companies = $this->companyRepository->getAll();
+            $companies = $this->companyRepository->findAll();
 
             return $this->render('index.twig', ['companies' => $companies]);
         } catch (Throwable $e) {

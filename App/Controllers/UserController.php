@@ -28,7 +28,7 @@ class UserController extends Controller
     public function index(): Response
     {
         try {
-            $users = $this->userRepository->getAll();
+            $users = $this->userRepository->findAll();
 
             return $this->render('index.twig', ['users' => $users]);
         } catch (Throwable $e) {
