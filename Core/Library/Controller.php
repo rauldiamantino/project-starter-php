@@ -11,9 +11,7 @@ abstract class Controller
 {
     protected Request $request;
 
-    public function __construct(private Twig $twig, protected string $folderView = '')
-    {
-    }
+    public function __construct(private Twig $twig, protected string $folderView = '') {}
 
     public function setRequest(Request $request)
     {
@@ -23,7 +21,7 @@ abstract class Controller
     protected function render(string $template, array $data = [], int $statusCode = 200): Response
     {
         if ($this->folderView) {
-          $template = $this->folderView . '/' . $template;
+            $template = $this->folderView . '/' . $template;
         }
 
         $html = $this->twig->env->render($template, $data);

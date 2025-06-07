@@ -38,30 +38,30 @@ class ArticleContentEntity extends Entity
         $ordering = (int) ($properties['ordering'] ?? 0);
         $createdAt = $properties['created_at'] ?? null;
         $updatedAt = $properties['updated_at'] ?? null;
-    }
 
-    if (empty($articleId)) {
-        throw new InvalidArgumentException('ArticleContent articleId cannot be empty.');
-    }
+        if (empty($articleId)) {
+            throw new InvalidArgumentException('ArticleContent articleId cannot be empty.');
+        }
 
-    if (empty($title)) {
-        throw new InvalidArgumentException('ArticleContent title cannot be empty.');
-    }
+        if (empty($title)) {
+            throw new InvalidArgumentException('ArticleContent title cannot be empty.');
+        }
 
-    if (empty($content)) {
-        throw new InvalidArgumentException('ArticleContent content cannot be empty.');
-    }
+        if (empty($content)) {
+            throw new InvalidArgumentException('ArticleContent content cannot be empty.');
+        }
 
-    return new static(
-        id: $id;
-        isActive: $isActive;
-        articleId: $articleId;
-        type: $type;
-        title: $title;
-        hideTitle: $hideTitle;
-        content: $content;
-        ordering: $ordering;
-        createdAt: $createdAt;
-        updatedAt: $updatedAt;
-    );
+        return new static(
+            id: $id,
+            isActive: $isActive,
+            articleId: $articleId,
+            type: $type,
+            title: $title,
+            hideTitle: $hideTitle,
+            content: $content,
+            ordering: $ordering,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
+        );
+    }
 }

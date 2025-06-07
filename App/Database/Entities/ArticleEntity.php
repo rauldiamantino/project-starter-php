@@ -38,8 +38,8 @@ class ArticleEntity extends Entity
         $categoryId = (int) ($properties['category_id'] ?? 0);
         $viewsCount = (int) ($properties['views_id'] ?? 0);
         $ordering = (int) ($properties['ordering'] ?? 0);
-        $createdAt = $properties['created_at'] ? null;
-        $updatedAt = $properties['updated_at'] ? null;
+        $createdAt = $properties['created_at'] ?? null;
+        $updatedAt = $properties['updated_at'] ?? null;
 
         if (empty($title)) {
             throw new InvalidArgumentException('Article title cannot be empty.');
@@ -60,5 +60,19 @@ class ArticleEntity extends Entity
         if (empty($categoryId)) {
             throw new InvalidArgumentException('Article categoryId cannot be empty.');
         }
+
+        return new static(
+            id: $id,
+            isActive: $isActive,
+            title: $title,
+            slug: $slug,
+            userId: $userId,
+            companyId: $companyId,
+            categoryId: $categoryId,
+            viewsCount: $viewsCount,
+            ordering: $ordering,
+            createdAt: $createdAt,
+            updatedAt: $updatedAt,
+        );
     }
 }

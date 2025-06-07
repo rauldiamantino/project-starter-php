@@ -48,7 +48,7 @@ class UserRepository extends Repository implements AuthInterface
     {
         return $this->findById($id);
     }
-    
+
     public function emailExists(string $email): bool
     {
         try {
@@ -65,17 +65,20 @@ class UserRepository extends Repository implements AuthInterface
             $this->logger->error(
                 'DBAL Error in User::emailExists: ' . $e->getMessage(),
                 [
-                'table' => $this->table,
-                'email' => $email,
-              ],
+                    'table' => $this->table,
+                    'email' => $email,
+                ],
             );
 
             throw new RuntimeException('Database error while checking email', 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical('PDO Error in User::emailExists: ' . $e->getMessage(), [
-                'table' => $this->table,
-                'email' => $email,
-            ]);
+            $this->logger->critical(
+                'PDO Error in User::emailExists: ' . $e->getMessage(),
+                [
+                    'table' => $this->table,
+                    'email' => $email,
+                ]
+            );
 
             throw new RuntimeException('Database connection error when checking email', 0, $e);
         }
@@ -107,17 +110,23 @@ class UserRepository extends Repository implements AuthInterface
 
             return $this->createEntityFromData($selected);
         } catch (DBALException $e) {
-            $this->logger->error('DBAL Error in UserRepository::auth: ' . $e->getMessage(), [
-                'table' => $this->table,
-                'email' => $email,
-            ]);
+            $this->logger->error(
+                'DBAL Error in UserRepository::auth: ' . $e->getMessage(),
+                [
+                    'table' => $this->table,
+                    'email' => $email,
+                ]
+            );
 
             throw new RuntimeException("Database error during authentication for email '{$email}'.", 0, $e);
         } catch (PDOException $e) {
-            $this->logger->critical('PDO Error in UserRepository::auth: ' . $e->getMessage(), [
-                'table' => $this->table,
-                'email' => $email,
-            ]);
+            $this->logger->critical(
+                'PDO Error in UserRepository::auth: ' . $e->getMessage(),
+                [
+                    'table' => $this->table,
+                    'email' => $email,
+                ]
+            );
 
             throw new RuntimeException("Database connection error during authentication for email '{$email}'.", 0, $e);
         }

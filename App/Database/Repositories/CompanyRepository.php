@@ -20,7 +20,6 @@ class CompanyRepository extends Repository
             $companyEntity = CompanyEntity::create($data);
         } catch (InvalidArgumentException $e) {
             $this->logger->error('Invalid data from database for CompanyEntity: ' . $e->getMessage(), ['data' => $data]);
-
             throw new RuntimeException('Internal failure: Corrupted data received from database for CompanyEntity.', 0, $e);
         }
 

@@ -113,11 +113,11 @@ abstract class Repository
                 ->from($this->table)
                 ->where('id = :id')
                 ->setParameter('id', $id)
-                ->fetchAllAssociative();
+                ->fetchAssociative();
 
             if ($selected === false || empty($selected)) {
-                $this->logger->info("Entidade com ID '{$id}' não encontrada na tabela '{$this->table}'.");
-                throw new EntityNotFoundException("Entidade com ID '{$id}' não encontrada.");
+                $this->logger->info("Entity with ID '{$id}' not found in table '{$this->table}'.");
+                throw new EntityNotFoundException("Entity with ID '{$id}' not found.");
             }
 
             return $this->createEntityFromData($selected);
@@ -161,6 +161,41 @@ abstract class Repository
             $this->logger->critical('PDO Error in Repository::findAll: ' . $e->getMessage(), ['table' => $this->table]);
 
             throw new RuntimeException('Database connection error while fetching all records.', 0, $e);
+        }
+    }
+
+    public function existsByCompanyId(int $companyId): bool
+    {
+        try {
+            $queryBuilder = $this->connection->createQueryBuilder();
+
+            $count = $queryBuilder->select('COUNT(id)')
+                ->from($this->table)
+                ->where('company_id = :company_id')
+                ->setParameter('company_id', $companyId)
+                ->fetchOne();
+
+            return (int) $count > 0;
+        } catch (DBALException $e) {
+            $this->logger->error(
+                'DBAL Error in Repository::companyHasDependents: ' . $e->getMessage(),
+                [
+                    'table' => $this->table,
+                    'companyId' => $companyId,
+                ],
+            );
+
+            throw new RuntimeException('Database error while checking companyId', 0, $e);
+        } catch (PDOException $e) {
+            $this->logger->critical(
+                'PDO Error in Repository::companyHasDependents: ' . $e->getMessage(),
+                [
+                    'table' => $this->table,
+                    'companyId' => $companyId,
+                ]
+            );
+
+            throw new RuntimeException('Database connection error when checking companyId', 0, $e);
         }
     }
 }

@@ -11,6 +11,7 @@ class CategoryEntity extends Entity
         public readonly int $isActive,
         public readonly int $parentId,
         public readonly string $name,
+        public readonly string $slug,
         public readonly string $description,
         public readonly int $companyId,
         public readonly int $ordering,
@@ -29,6 +30,7 @@ class CategoryEntity extends Entity
         $id = $properties['id'] ?? null;
         $isActive = (int) ($properties['is_active'] ?? 0);
         $name = trim($properties['name'] ?? '');
+        $slug = trim($properties['slug'] ?? '');
         $description = trim($properties['description'] ?? '');
         $companyId = (int) ($properties['company_id'] ?? 0);
         $parentId = (int) ($properties['parent_id'] ?? 0);
@@ -52,6 +54,7 @@ class CategoryEntity extends Entity
             id: $id,
             isActive: $isActive,
             name: $name,
+            slug: $slug,
             description: $description,
             companyId: $companyId,
             parentId: $parentId,

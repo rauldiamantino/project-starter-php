@@ -3,27 +3,41 @@
 namespace App\Services;
 
 use Throwable;
+use PDOException;
 use RuntimeException;
 
 use Core\Library\Logger;
 use Core\Utils\SlugGenerator;
+
 use InvalidArgumentException;
 use App\Database\Entities\CompanyEntity;
-
+use App\Database\Repositories\UserRepository;
+use App\Exceptions\CompanyNotExistsException;
 use App\Exceptions\CnpjAlreadyExistsException;
 use App\Exceptions\NameAlreadyExistsException;
+use App\Database\Repositories\ArticleRepository;
 use App\Database\Repositories\CompanyRepository;
-use App\Exceptions\CompanyNotExistsException;
+use App\Database\Repositories\CategoryRepository;
+use App\Exceptions\CompanyHasDependentsException;
+use App\Database\Repositories\ArticleContentRepository;
 
 class CompanyService
 {
     public function __construct(
         private CompanyRepository $companyRepository,
-        private Logger $logger
+        private Logger $logger,
+        private CategoryRepository $categoryRepository,
+        private UserRepository $userRepository,
+        private ArticleRepository $articleRepository,
+        private ArticleContentRepository $articleContentRepository,
     ) {}
 
     public function createCompany(array $companyData): CompanyEntity
     {
+        if (!isset($companyData['name'], $companyData['cnpj'])) {
+            throw new InvalidArgumentException('Missing required company data: name and cnpj.');
+        }
+
         $name = $companyData['name'];
         $cnpj = onlyNumbers($companyData['cnpj']);
 
@@ -35,22 +49,10 @@ class CompanyService
             throw new CnpjAlreadyExistsException('The cnpj already exists');
         }
 
-        $baseSlug = SlugGenerator::generate($name);
-        $finalSlug = $baseSlug;
-
-        $counter = 1;
-        while ($this->companyRepository->slugExists($finalSlug)) {
-            $finalSlug = $baseSlug . '-' . $counter++;
-
-            if ($counter > 100) {
-                throw new RuntimeException("Could not generate a unique slug for company: {$name}. Too many attempts.");
-            }
-        }
-
         $data = [
             'name' => $name,
             'cnpj' => $cnpj,
-            'slug' => $finalSlug,
+            'slug' => $this->generateUniqueSlug($name),
         ];
 
         try {
@@ -63,26 +65,62 @@ class CompanyService
         return $this->companyRepository->create($entity);
     }
 
-    public function deleteCompany(int $id): void // Retorna void porque o sucesso é implicado e a falha é por exceção
+    private function generateUniqueSlug(string $base): string
+    {
+        $slug = SlugGenerator::generate($base);
+        $finalSlug = $slug;
+        $counter = 1;
+
+        while ($this->companyRepository->slugExists($finalSlug)) {
+            $finalSlug = $slug . '-' . $counter++;
+
+            if ($counter > 100) {
+                throw new RuntimeException("Could not generate a unique slug for company: {$base}. Too many attempts.");
+            }
+        }
+
+        return $finalSlug;
+    }
+
+
+    public function deleteCompany(int $id): void
     {
         $company = $this->companyRepository->getCompanyById($id);
 
         if (!$company) {
-            throw new CompanyNotExistsException("Company with ID {$id} does not exists.");
+            throw new CompanyNotExistsException("Company with ID {$id} does not exist.");
         }
 
-        // if ($company->hasDependents()) {
-        //     throw new CompanyHasDependentsException("Cannot delete company {$company->getName()} because it has related data.");
-        // }
+        if ($this->companyHasAnyDependents($id)) {
+            throw new CompanyHasDependentsException("Cannot delete company {$company->name} because it has related data.");
+        }
 
         try {
             $this->companyRepository->delete($company);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             $this->logger->error('Persistence error when deleting company: ' . $e->getMessage());
-            throw new \Exception('Error deleting company from database.', 0, $e);
+            throw new RuntimeException('Error deleting company from database.', 0, $e);
         } catch (Throwable $e) {
             $this->logger->error('Unexpected error in CompanyService::deleteCompany: ' . $e->getMessage());
-            throw new \Exception('Internal error when deleting the company.', 0, $e);
+            throw new RuntimeException('Internal error when deleting the company.', 0, $e);
         }
+    }
+
+    private function companyHasAnyDependents(int $companyId): bool
+    {
+        $repositoriesToCheck = [
+            $this->userRepository,
+            $this->categoryRepository,
+            $this->articleRepository,
+            $this->articleContentRepository,
+        ];
+
+        foreach ($repositoriesToCheck as $repository) {
+            if ($repository->existsByCompanyId($companyId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -35,7 +35,6 @@ class CompanyController extends Controller
             return $this->render('index.twig', ['companies' => $companies]);
         } catch (Throwable $e) {
             $this->logger->error('Unexpected error in CompanyController::index: ' . $e->getMessage());
-
             return $this->redirect('/', 'error', 'An unexpected error occurred while loading companies.');
         }
     }
@@ -48,7 +47,6 @@ class CompanyController extends Controller
             return $this->render('show.twig', ['company' => $company]);
         } catch (Throwable $e) {
             $this->logger->error('Unexpected error in CompanyController::show: ' . $e->getMessage());
-
             return $this->redirect('/', 'error', 'An unexptected error occurred while loading company.');
         }
     }
@@ -86,11 +84,8 @@ class CompanyController extends Controller
 
             return $this->redirect('/companies', 'success', 'Deleted successfully!');
         } catch (CompanyNotExistsException $e) {
-
             return $this->redirect('/companies', 'error', $e->getMessage());
-
         } catch (CompanyHasDependentsException $e) {
-
             return $this->redirect('/companies', 'error', $e->getMessage());
         } catch (Throwable $e) {
             $this->logger->error('Unexpected error in CompanyController::delete: ' . $e->getMessage());
