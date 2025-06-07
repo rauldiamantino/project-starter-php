@@ -9,9 +9,7 @@ use App\Database\Repositories\UserRepository;
 
 class Auth
 {
-    public function __construct(private UserRepository $userRepository)
-    {
-    }
+    public function __construct(private UserRepository $userRepository) {}
 
     public function attempt(array $data): bool
     {
@@ -22,7 +20,7 @@ class Auth
             return false;
         }
 
-        if (!password_verify($data['password'], $user->password)) {
+        if (!password_verify($data['password'], $user->getPassword())) {
             return false;
         }
 

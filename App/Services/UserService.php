@@ -40,7 +40,7 @@ class UserService
         $data = [
           'name' => $userData['name'],
           'email' => $userData['email'],
-          'company_id' => $company->id,
+          'company_id' => $company->getId(),
           'password' => $hashedPassword,
           'level' => $userData['level'],
         ];

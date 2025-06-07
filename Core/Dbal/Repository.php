@@ -27,7 +27,7 @@ abstract class Repository
 
     public function create(Entity $entity): Entity
     {
-        if (property_exists($entity, 'id') && $entity->id !== null) {
+        if (property_exists($entity, 'id') && $entity->getId() !== null) {
             throw new RuntimeException('Cannot create an entity that already has an ID. Use update() instead.');
         }
 
@@ -60,14 +60,14 @@ abstract class Repository
 
     public function update(Entity $entity): void
     {
-        if (!property_exists($entity, 'id') || $entity->id === null) {
+        if (!property_exists($entity, 'id') || $entity->getId() === null) {
             throw new RuntimeException("Cannot update an entity without an ID. Use create() for new entities.");
         }
 
         try {
             $dataToUpdate = $this->mapEntityToData($entity);
 
-            $this->connection->update($this->table, $dataToUpdate, ['id' => $entity->id]);
+            $this->connection->update($this->table, $dataToUpdate, ['id' => $entity->getId()]);
         } catch (DBALException $e) {
             $this->logger->error('DBAL Error in ' . static::class . '::update: ' . $e->getMessage(), ['table' => $this->table]);
 
@@ -81,26 +81,26 @@ abstract class Repository
 
     public function delete(Entity $entity): void
     {
-        if (!property_exists($entity, 'id') || $entity->id === null) {
+        if (!property_exists($entity, 'id') || $entity->getId() === null) {
             $this->logger->warning('Attempted to delete an entity without an ID.', ['table' => $this->table]);
 
             throw new RuntimeException('Cannot delete an entity without an ID.');
         }
 
         try {
-            $result = $this->connection->delete($this->table, ['id' => $entity->id]);
+            $result = $this->connection->delete($this->table, ['id' => $entity->getId()]);
 
             if ($result === 0) {
-                $this->logger->info("No record found with ID '{$entity->id}' for deletion'.", ['table' => $this->table]);
+                $this->logger->info("No record found with ID '{$entity->getId()}' for deletion'.", ['table' => $this->table]);
             }
         } catch (DBALException $e) {
             $this->logger->error('DBAL Error in ' . static::class . '::delete: ' . $e->getMessage(), ['table' => $this->table]);
 
-            throw new RuntimeException("Database error while deleting entity with ID '{$entity->id}' from table '{$this->table}'.", 0, $e);
+            throw new RuntimeException("Database error while deleting entity with ID '{$entity->getId()}' from table '{$this->table}'.", 0, $e);
         } catch (PDOException $e) {
             $this->logger->critical('PDO Error in ' . static::class . '::delete: ' . $e->getMessage(), ['table' => $this->table]);
 
-            throw new RuntimeException("Database connection error while deleting entity with ID '{$entity->id}' from table '{$this->table}'.", 0, $e);
+            throw new RuntimeException("Database connection error while deleting entity with ID '{$entity->getId()}' from table '{$this->table}'.", 0, $e);
         }
     }
 

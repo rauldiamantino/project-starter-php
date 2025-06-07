@@ -29,13 +29,13 @@ class ArticleContentRepository extends Repository
     {
         /** @var ArticleContentEntity $entity */
         return [
-            'isActive' => $entity->isActive,
-            'articleId' => $entity->articleId,
-            'type' => $entity->type,
-            'title' => $entity->title,
-            'hideTitle' => $entity->hideTitle,
-            'content' => $entity->content,
-            'ordering' => $entity->ordering,
+            'isActive' => $entity->getIsActive(),
+            'articleId' => $entity->getArticleId(),
+            'type' => $entity->getType(),
+            'title' => $entity->getTitle(),
+            'hideTitle' => $entity->getHideTitle(),
+            'content' => $entity->getContent(),
+            'ordering' => $entity->getOrdering(),
         ];
     }
 

@@ -8,50 +8,105 @@ use InvalidArgumentException;
 class CompanyEntity extends Entity
 {
     public function __construct(
-        public readonly int $isActive,
-        public readonly string $cnpj,
-        public readonly string $slug,
-        public readonly string $name,
-        public readonly ?int $id = null,
-        public readonly ?string $createdAt = null,
-        public readonly ?string $updatedAt = null
-    ) {
-    }
+        private int $isActive,
+        private string $cnpj,
+        private string $slug,
+        private string $name,
+        private ?string $createdAt = null,
+        private ?string $updatedAt = null
+    ) {}
 
     public static function create(array $properties): Entity
     {
-        if (!is_array($properties) || empty($properties)) {
+        if (empty($properties)) {
             throw new InvalidArgumentException('Invalid or empty properties array provided to create CompanyEntity.');
         }
 
-        $id = $properties['id'] ?? null;
+        $id = isset($properties['id']) ? (int) $properties['id'] : null;
         $isActive = (int) ($properties['is_active'] ?? 0);
-        $name = trim($properties['name'] ?? '');
-        $slug = strtolower(trim($properties['slug'] ?? ''));
-        $cnpj = trim($properties['cnpj'] ?? '');
+        $name = trim((string) ($properties['name'] ?? ''));
+        $slug = strtolower(trim((string) ($properties['slug'] ?? '')));
+        $cnpj = trim((string) ($properties['cnpj'] ?? ''));
         $createdAt = $properties['created_at'] ?? null;
         $updatedAt = $properties['updated_at'] ?? null;
 
-        if (empty($name)) {
+        if ($name === '') {
             throw new InvalidArgumentException('Company name cannot be empty.');
         }
 
-        if (empty($slug)) {
+        if ($slug === '') {
             throw new InvalidArgumentException('Company slug cannot be empty.');
         }
 
-        if (empty($cnpj)) {
+        if ($cnpj === '') {
             throw new InvalidArgumentException('Company CNPJ cannot be empty.');
         }
 
-        return new static(
-            id: $id,
+        $entity = new static(
             isActive: $isActive,
-            name: $name,
-            slug: $slug,
             cnpj: $cnpj,
+            slug: $slug,
+            name: $name,
             createdAt: $createdAt,
-            updatedAt: $updatedAt,
+            updatedAt: $updatedAt
         );
+
+        if ($id !== null) {
+            $entity->id = $id;
+        }
+
+        return $entity;
+    }
+
+    // Getters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    public function getIsActive(): int
+    {
+        return $this->isActive;
+    }
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+    public function getCnpj(): string
+    {
+        return $this->cnpj;
+    }
+    public function getCreatedAt(): ?string
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): ?string
+    {
+        return $this->updatedAt;
+    }
+
+    // Setters
+    public function setIsActive(int $isActive): void
+    {
+        $this->isActive = $isActive;
+    }
+    public function setName(string $name): void
+    {
+        $this->name = trim($name);
+    }
+    public function setCnpj(string $cnpj): void
+    {
+        $this->cnpj = trim($cnpj);
+    }
+    public function setSlug(string $slug): void
+    {
+        $this->slug = strtolower(trim($slug));
+    }
+    public function setUpdatedAt(?string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

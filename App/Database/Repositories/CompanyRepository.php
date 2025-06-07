@@ -3,7 +3,6 @@
 namespace App\Database\Repositories;
 
 use Core\Dbal\Repository;
-use Core\Dbal\exceptions\EntityNotFoundException;
 use PDOException;
 use InvalidArgumentException;
 use RuntimeException;
@@ -30,10 +29,10 @@ class CompanyRepository extends Repository
     {
         /** @var CompanyEntity $entity */
         return [
-            'is_active' => $entity->isActive,
-            'name' => $entity->name,
-            'cnpj' => $entity->cnpj,
-            'slug' => $entity->slug,
+            'is_active' => $entity->getIsActive(),
+            'name' => $entity->getName(),
+            'cnpj' => $entity->getCnpj(),
+            'slug' => $entity->getSlug(),
         ];
     }
 
@@ -42,16 +41,22 @@ class CompanyRepository extends Repository
         return $this->findById($id);
     }
 
-    public function cnpjExists(string $cnpj): bool
+    public function cnpjExists(string $cnpj, ?int $id = null): bool
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
 
-            $count = $queryBuilder->select('COUNT(id)')
+            $queryBuilder->select('COUNT(id)')
                 ->from($this->table)
                 ->where('cnpj = :cnpj')
-                ->setParameter('cnpj', $cnpj)
-                ->fetchOne();
+                ->setParameter('cnpj', $cnpj);
+
+            if ($id) {
+                $queryBuilder->andWhere('id != :id')
+                        ->setParameter('id', (int) $id);
+            }
+
+            $count = $queryBuilder->fetchOne();
 
             return (int) $count > 0;
         } catch (DBALException $e) {
@@ -71,16 +76,22 @@ class CompanyRepository extends Repository
         }
     }
 
-    public function nameExists(string $name): bool
+    public function nameExists(string $name, ?int $id = null): bool
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
 
-            $count = $queryBuilder->select('COUNT(id)')
+            $queryBuilder->select('COUNT(id)')
                 ->from($this->table)
                 ->where('name = :name')
-                ->setParameter('name', $name)
-                ->fetchOne();
+                ->setParameter('name', $name);
+            
+            if ($id) {
+                $queryBuilder->andWhere('id != :id')
+                        ->setParameter('id', (int) $id);
+            }
+            
+            $count = $queryBuilder->fetchOne();
 
             return (int) $count > 0;
         } catch (DBALException $e) {

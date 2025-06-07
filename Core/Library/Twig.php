@@ -14,7 +14,7 @@ class Twig
     {
         $loader = new FilesystemLoader(dirname(__FILE__, 3) . '/App/Views');
 
-        $this->env = new Environment($loader, ['debug' => false]);
+        $this->env = new Environment($loader, ['debug' => true]);
     }
 
     public function add_functions()

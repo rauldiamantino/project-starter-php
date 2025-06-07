@@ -29,13 +29,13 @@ class CategoryRepository extends Repository
     {
         /** @var CategoryEntity $entity */
         return [
-            'is_active' => $entity->isActive,
-            'parent_id' => $entity->parentId,
-            'name' => $entity->name,
-            'slug' => $entity->slug,
-            'description' => $entity->description,
-            'ordering' => $entity->ordering,
-            'company_id' => $entity->companyId,
+            'is_active' => $entity->getIsActive(),
+            'parent_id' => $entity->getParentId(),
+            'name' => $entity->getName(),
+            'slug' => $entity->getSlug(),
+            'description' => $entity->getDescription(),
+            'ordering' => $entity->getOrdering(),
+            'company_id' => $entity->getCompanyId(),
         ];
     }
 

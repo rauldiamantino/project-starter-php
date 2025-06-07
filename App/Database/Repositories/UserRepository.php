@@ -35,12 +35,12 @@ class UserRepository extends Repository implements AuthInterface
     {
         /** @var UserEntity $entity */
         return [
-            'is_active' => $entity->isActive,
-            'name' => $entity->name,
-            'email' => $entity->email,
-            'password' => $entity->password,
-            'company_id' => $entity->companyId,
-            'level' => $entity->level,
+            'is_active' => $entity->getIsActive(),
+            'name' => $entity->getName(),
+            'email' => $entity->getEmail(),
+            'password' => $entity->getPassword(),
+            'company_id' => $entity->getCompanyId(),
+            'level' => $entity->getLevel(),
         ];
     }
 

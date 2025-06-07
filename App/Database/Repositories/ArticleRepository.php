@@ -27,14 +27,14 @@ class ArticleRepository extends Repository
     {
         /** @var ArticleEntity $entity */
         return [
-            'is_active' => $entity->isActive,
-            'title' => $entity->title,
-            'slug' => $entity->slug,
-            'user_id' => $entity->userId,
-            'company_id' => $entity->companyId,
-            'category_id' => $entity->categoryId,
-            'viewsCount' => $entity->viewsCount,
-            'ordering' => $entity->ordering,
+            'is_active' => $entity->getIsActive(),
+            'title' => $entity->getTitle(),
+            'slug' => $entity->getSlug(),
+            'user_id' => $entity->getUserId(),
+            'company_id' => $entity->getCompanyId(),
+            'category_id' => $entity->getCategoryId(),
+            'viewsCount' => $entity->getViewsCount(),
+            'ordering' => $entity->getOrdering(),
         ];
     }
 

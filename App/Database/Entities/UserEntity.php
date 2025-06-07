@@ -8,47 +8,45 @@ use InvalidArgumentException;
 class UserEntity extends Entity
 {
     public function __construct(
-        public readonly int $isActive,
-        public readonly string $name,
-        public readonly string $email,
-        public readonly int $companyId,
-        public readonly string $password,
-        public readonly int $level,
-        public readonly ?int $id = null,
-        public readonly ?string $createdAt = null,
-        public readonly ?string $updatedAt = null
-    ) {
-    }
+        private int $isActive,
+        private string $name,
+        private string $email,
+        private int $companyId,
+        private string $password,
+        private int $level,
+        private ?string $createdAt = null,
+        private ?string $updatedAt = null
+    ) {}
 
     public static function create(array $properties): Entity
     {
-        if (!is_array($properties) || empty($properties)) {
-            throw new InvalidArgumentException('Invalid properties provided to create UserEntity.');
+        if (empty($properties)) {
+            throw new InvalidArgumentException('Invalid or empty properties array provided to create UserEntity.');
         }
 
-        $id = $properties['id'] ?? null;
-        $isActive = (int) ($properties['isActive'] ?? 0);
-        $name = trim($properties['name'] ?? '');
-        $email = strtolower(trim($properties['email'] ?? ''));
+        $id = isset($properties['id']) ? (int) $properties['id'] : null;
+        $isActive = (int) ($properties['is_active'] ?? 0);
+        $name = trim((string) ($properties['name'] ?? ''));
+        $email = strtolower(trim((string) ($properties['email'] ?? '')));
         $companyId = (int) ($properties['company_id'] ?? 0);
-        $password = $properties['password'] ?? '';
+        $password = (string) ($properties['password'] ?? '');
         $level = (int) ($properties['level'] ?? 0);
         $createdAt = $properties['created_at'] ?? null;
         $updatedAt = $properties['updated_at'] ?? null;
 
-        if (empty($name)) {
+        if ($name === '') {
             throw new InvalidArgumentException('User name cannot be empty.');
         }
 
-        if (empty($email)) {
+        if ($email === '') {
             throw new InvalidArgumentException('User email cannot be empty.');
         }
 
-        if (empty($companyId)) {
-            throw new InvalidArgumentException('User companyId cannot be empty.');
+        if ($companyId <= 0) {
+            throw new InvalidArgumentException('User company ID cannot be empty or zero.');
         }
 
-        if (empty($password)) {
+        if ($password === '') {
             throw new InvalidArgumentException('User password cannot be empty.');
         }
 
@@ -56,8 +54,7 @@ class UserEntity extends Entity
             throw new InvalidArgumentException('User level must be a positive integer.');
         }
 
-        return new self(
-            id: $id,
+        $entity = new static(
             isActive: $isActive,
             name: $name,
             email: $email,
@@ -65,7 +62,81 @@ class UserEntity extends Entity
             password: $password,
             level: $level,
             createdAt: $createdAt,
-            updatedAt: $updatedAt,
+            updatedAt: $updatedAt
         );
+
+        if ($id !== null) {
+            $entity->id = $id;
+        }
+
+        return $entity;
+    }
+
+    ## Getters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    public function getIsActive(): int
+    {
+        return $this->isActive;
+    }
+    public function getName(): string
+    {
+        return $this->name;
+    }
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+    public function getCompanyId(): int
+    {
+        return $this->companyId;
+    }
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+    public function getCreatedAt(): ?string
+    {
+        return $this->createdAt;
+    }
+    public function getUpdatedAt(): ?string
+    {
+        return $this->updatedAt;
+    }
+
+    ## Setters
+    public function setIsActive(int $isActive): void
+    {
+        $this->isActive = $isActive;
+    }
+    public function setName(string $name): void
+    {
+        $this->name = trim($name);
+    }
+    public function setEmail(string $email): void
+    {
+        $this->email = strtolower(trim($email));
+    }
+    public function setCompanyId(int $companyId): void
+    {
+        $this->companyId = $companyId;
+    }
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+    public function setLevel(int $level): void
+    {
+        $this->level = $level;
+    }
+    public function setUpdatedAt(?string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

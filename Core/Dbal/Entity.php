@@ -4,6 +4,12 @@ namespace Core\Dbal;
 
 abstract class Entity
 {
-    public readonly ?int $id;
+    protected ?int $id = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     abstract public static function create(array $properties): Entity;
 }

@@ -65,6 +65,44 @@ class CompanyService
         return $this->companyRepository->create($entity);
     }
 
+    public function editCompany(int $id, array $companyData): CompanyEntity
+    {
+        if (empty($id)) {
+            throw new InvalidArgumentException('Missing required company data: id');
+        }
+
+        if (!isset($companyData['name']) || !isset($companyData['cnpj'])) {
+            throw new InvalidArgumentException('Missing required company data: name and cnpj.');
+        }
+
+        $name = $companyData['name'];
+        $cnpj = onlyNumbers($companyData['cnpj']);
+        $isActive = $companyData['is_active'];
+
+        if ($this->companyRepository->nameExists($name, $id)) {
+            throw new NameAlreadyExistsException('The name already exists');
+        }
+
+        if ($this->companyRepository->cnpjExists($cnpj, $id)) {
+            throw new CnpjAlreadyExistsException('The cnpj already exists');
+        }
+
+        $entity = $this->companyRepository->getCompanyById($id);
+
+        if (!$entity) {
+            throw new RuntimeException('Company not found.');
+        }
+
+        $entity->setName($name);
+        $entity->setCnpj($cnpj);
+        $entity->setIsActive($isActive);
+        $entity->setUpdatedAt(date('Y-m-d H:i:s'));
+
+        $this->companyRepository->update($entity);
+
+        return $entity;
+    }
+
     private function generateUniqueSlug(string $base): string
     {
         $slug = SlugGenerator::generate($base);
@@ -92,7 +130,7 @@ class CompanyService
         }
 
         if ($this->companyHasAnyDependents($id)) {
-            throw new CompanyHasDependentsException("Cannot delete company {$company->name} because it has related data.");
+            throw new CompanyHasDependentsException("Cannot delete company {$company->getName()} because it has related data.");
         }
 
         try {
