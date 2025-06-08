@@ -4,3 +4,4 @@
 /Temp
 /vendor
 /Public/php_errors.log
+.php-cs-fixer.cache
