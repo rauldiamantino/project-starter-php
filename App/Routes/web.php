@@ -19,9 +19,11 @@ $router->add('GET', '/500', [ServerErrorController::class, 'index']);
 
 // User
 $router->add('GET', '/users', [UserController::class, 'index']);
-$router->add('GET', '/users/{id:[0-9]+}', [UserController::class, 'show']);
+$router->add('GET', '/users/{id:[0-9]+}', [UserController::class, 'edit']);
 $router->add('GET', '/users/create', [UserController::class, 'create']);
-$router->add('POST', '/users/store', [UserController::class, 'store']);
+$router->add('POST', '/users', [UserController::class, 'store']);
+$router->add('DELETE', '/users/{id:[0-9]+}', [UserController::class, 'delete']);
+$router->add('PUT', '/users/{id:[0-9]+}', [UserController::class, 'update']);
 
 // Company
 $router->add('GET', '/companies', [CompanyController::class, 'index']);

@@ -33,25 +33,18 @@ class CompanyService
 
     public function createCompany(array $companyData): CompanyEntity
     {
-        if (!isset($companyData['name'], $companyData['cnpj'])) {
-            throw new InvalidArgumentException('Missing required company data: name and cnpj.');
-        }
-
-        $name = $companyData['name'];
-        $cnpj = onlyNumbers($companyData['cnpj']);
-
-        if ($this->companyRepository->nameExists($name)) {
+        if ($this->companyRepository->nameExists($companyData['name'])) {
             throw new NameAlreadyExistsException('The name already exists');
         }
 
-        if ($this->companyRepository->cnpjExists($cnpj)) {
+        if ($this->companyRepository->cnpjExists(onlyNumbers($companyData['cnpj']))) {
             throw new CnpjAlreadyExistsException('The cnpj already exists');
         }
 
         $data = [
-            'name' => $name,
-            'cnpj' => $cnpj,
-            'slug' => $this->generateUniqueSlug($name),
+            'name' => $companyData['name'],
+            'cnpj' => onlyNumbers($companyData['cnpj']),
+            'slug' => $this->generateUniqueSlug($companyData['name']),
         ];
 
         try {
@@ -66,51 +59,22 @@ class CompanyService
 
     public function editCompany(int $id, array $companyData): CompanyEntity
     {
-        if (empty($id)) {
-            throw new InvalidArgumentException('Missing required company data: id');
-        }
-
-        if (!isset($companyData['name']) || !isset($companyData['cnpj'])) {
-            throw new InvalidArgumentException('Missing required company data: name and cnpj.');
-        }
-
-        $name = $companyData['name'];
-        $cnpj = onlyNumbers($companyData['cnpj']);
-        $isActive = $companyData['is_active'];
-
-        if ($this->companyRepository->nameExists($name, $id)) {
+        if ($this->companyRepository->nameExists($companyData['name'], $id)) {
             throw new NameAlreadyExistsException('The name already exists');
         }
 
-        if ($this->companyRepository->cnpjExists($cnpj, $id)) {
+        if ($this->companyRepository->cnpjExists(onlyNumbers($companyData['cnpj']), $id)) {
             throw new CnpjAlreadyExistsException('The cnpj already exists');
         }
 
         $entity = $this->companyRepository->getCompanyById($id);
-
-        if (!$entity) {
-            throw new RuntimeException('Company not found.');
-        }
-
-        $entity->setName($name);
-        $entity->setCnpj($cnpj);
-        $entity->setIsActive($isActive);
+        $entity->setName($companyData['name']);
+        $entity->setCnpj(onlyNumbers($companyData['cnpj']));
+        $entity->setIsActive($companyData['is_active']);
         $entity->setUpdatedAt(date('Y-m-d H:i:s'));
-
         $this->companyRepository->updateCompany($entity);
 
         return $entity;
-    }
-
-
-    public function findAllCompanies(): array
-    {
-        return $this->companyRepository->findAllCompanies();
-    }
-
-    public function getCompanyById(int $id): CompanyEntity
-    {
-        return $this->companyRepository->getCompanyById($id);
     }
 
     public function deleteCompanyById(int $id): void
@@ -135,6 +99,17 @@ class CompanyService
             throw new RuntimeException('Internal error when deleting the company.', 0, $e);
         }
     }
+
+    public function findAllCompanies(): array
+    {
+        return $this->companyRepository->findAllCompanies();
+    }
+
+    public function getCompanyById(int $id): CompanyEntity
+    {
+        return $this->companyRepository->getCompanyById($id);
+    }
+
 
     private function generateUniqueSlug(string $base): string
     {

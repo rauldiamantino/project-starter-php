@@ -45,7 +45,7 @@ class UserRepository extends Repository implements AuthInterface
         return $this->findById($id);
     }
 
-    public function emailExists(string $email): bool
+    public function emailExists(string $email, ?int $id = null): bool
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
@@ -53,8 +53,14 @@ class UserRepository extends Repository implements AuthInterface
             $count = $queryBuilder->select('COUNT(id)')
                 ->from($this->table)
                 ->where('email = :email')
-                ->setParameter('email', $email)
-                ->fetchOne();
+                ->setParameter('email', $email);
+
+            if ($id !== null) {
+                $queryBuilder->andWhere('id != :id')
+                        ->setParameter('id', (int) $id);
+            }
+
+            $count = $queryBuilder->fetchOne();
 
             return (int) $count > 0;
         } catch (DBALException $e) {

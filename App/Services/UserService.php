@@ -3,15 +3,15 @@
 namespace App\Services;
 
 use Core\Dbal\Entity;
-use Core\Dbal\Exceptions\EntityNotFoundException;
+use RuntimeException;
+use Core\Library\Logger;
+use InvalidArgumentException;
 use App\Database\Entities\UserEntity;
 use App\Database\Repositories\UserRepository;
 use App\Exceptions\CompanyNotExistsException;
 use App\Exceptions\EmailAlreadyExistsException;
 use App\Database\Repositories\CompanyRepository;
-use Core\Library\Logger;
-use RuntimeException;
-use InvalidArgumentException;
+use Core\Dbal\Exceptions\EntityNotFoundException;
 
 class UserService
 {
@@ -22,25 +22,20 @@ class UserService
     ) {
     }
 
-    public function createUser(array $userData): Entity
+    public function createUser(array $userData): UserEntity
     {
-        if ($this->userRepository->emailExists($userData['email'])) {
-            throw new EmailAlreadyExistsException('The email already exists');
-        }
-
         try {
             $company = $this->companyRepository->getCompanyById($userData['company_id']);
         } catch (EntityNotFoundException $e) {
-            throw new CompanyNotExistsException("Company with ID {$userData['company_id']} does not exist.", 0, $e);
+            throw new CompanyNotExistsException('This company does not exists');
         }
-
-        $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
-
+        
         $data = [
           'name' => $userData['name'],
+          'is_active' => 1,
           'email' => $userData['email'],
           'company_id' => $company->getId(),
-          'password' => $hashedPassword,
+          'password' => $this->hashPassword($userData['password']),
           'level' => $userData['level'],
         ];
 
@@ -54,6 +49,29 @@ class UserService
         return $this->userRepository->createUser($entity);
     }
 
+    public function editUser(int $id, array $userData): UserEntity
+    {
+        if ($this->userRepository->emailExists($userData['email'], $id)) {
+            throw new EmailAlreadyExistsException('The email already exists');
+        }
+
+        $entity = $this->userRepository->getUserById($id);
+        $entity->setIsActive($userData['is_active']);
+        $entity->setName($userData['name']);
+        $entity->setEmail($userData['email']);
+        $entity->setLevel($userData['level']);
+        $entity->setUpdatedAt(date('Y-m-d H:i:s'));
+        $this->userRepository->updateUser($entity);
+        
+        return $entity;
+    }
+
+    public function deleteUserById(int $id): void
+    {
+        $user = $this->userRepository->getUserById($id);
+        $this->userRepository->deleteUser($user);
+    }
+
     public function findAllUsers(): array
     {
         return $this->userRepository->findAllUsers();
@@ -64,9 +82,8 @@ class UserService
         return $this->userRepository->getUserById($id);
     }
 
-    public function deleteUserById(int $id): void
+    private function hashPassword(string $password): string
     {
-        $user = $this->userRepository->getUserById($id);
-        $this->userRepository->deleteUser($user);
+        return password_hash($password, PASSWORD_DEFAULT);
     }
 }

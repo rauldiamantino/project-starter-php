@@ -7,7 +7,9 @@ use Core\Library\Logger;
 use Core\Library\Response;
 use Core\Library\Controller;
 use App\Services\UserService;
+use App\Request\UserEditFormRequest;
 use App\Request\UserCreateFormRequest;
+use App\Exceptions\CompanyNotExistsException;
 use App\Exceptions\EmailAlreadyExistsException;
 
 class UserController extends Controller
@@ -26,10 +28,27 @@ class UserController extends Controller
         return $this->render('index.twig', ['users' => $users]);
     }
 
-    public function show(int $id): Response
+    public function edit(int $id): Response
     {
         $user = $this->userService->getUserById($id);
-        return $this->render('show.twig', ['user' => $user]);
+        return $this->render('edit.twig', ['user' => $user]);
+    }
+
+    public function update(int $id): Response
+    {
+        $formRequest = UserEditFormRequest::validate($this->request);
+
+        if ($formRequest === null) {
+            return $this->redirect('/users/' . $id);
+        }
+
+        try {
+            $userData = $formRequest->validated()->all();
+            $this->userService->editUser($id, $userData);
+            return $this->redirect('/users/' . $id, 'success', 'Updated successfully!');
+        } catch (CompanyNotExistsException | EmailAlreadyExistsException $e) {
+            return $this->redirect('/users/' . $id, 'error', $e->getMessage());
+        }
     }
 
     public function create(): Response
