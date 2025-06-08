@@ -10,7 +10,7 @@ class NotFoundController extends Controller
 {
     public function __construct(Twig $twig)
     {
-        parent::__construct($twig);
+        parent::__construct($twig, folderView: 'Error');
     }
 
     public function index(): Response

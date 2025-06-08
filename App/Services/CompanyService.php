@@ -61,7 +61,7 @@ class CompanyService
             throw new RuntimeException('Internal error: invalid data provided for company entity creation.', 0, $e);
         }
 
-        return $this->companyRepository->create($entity);
+        return $this->companyRepository->createCompany($entity);
     }
 
     public function editCompany(int $id, array $companyData): CompanyEntity
@@ -97,9 +97,43 @@ class CompanyService
         $entity->setIsActive($isActive);
         $entity->setUpdatedAt(date('Y-m-d H:i:s'));
 
-        $this->companyRepository->update($entity);
+        $this->companyRepository->updateCompany($entity);
 
         return $entity;
+    }
+
+
+    public function findAllCompanies(): array
+    {
+        return $this->companyRepository->findAllCompanies();
+    }
+
+    public function getCompanyById(int $id): CompanyEntity
+    {
+        return $this->companyRepository->getCompanyById($id);
+    }
+
+    public function deleteCompanyById(int $id): void
+    {
+        $company = $this->companyRepository->getCompanyById($id);
+
+        if (!$company) {
+            throw new CompanyNotExistsException("Company with ID {$id} does not exist.");
+        }
+
+        if ($this->companyHasAnyDependents($id)) {
+            throw new CompanyHasDependentsException("Cannot delete company {$company->getName()} because it has related data.");
+        }
+
+        try {
+            $this->companyRepository->deleteCompany($company);
+        } catch (PDOException $e) {
+            $this->logger->error('Persistence error when deleting company: ' . $e->getMessage());
+            throw new RuntimeException('Error deleting company from database.', 0, $e);
+        } catch (Throwable $e) {
+            $this->logger->error('Unexpected error in CompanyService::deleteCompany: ' . $e->getMessage());
+            throw new RuntimeException('Internal error when deleting the company.', 0, $e);
+        }
     }
 
     private function generateUniqueSlug(string $base): string
@@ -117,30 +151,6 @@ class CompanyService
         }
 
         return $finalSlug;
-    }
-
-
-    public function deleteCompany(int $id): void
-    {
-        $company = $this->companyRepository->getCompanyById($id);
-
-        if (!$company) {
-            throw new CompanyNotExistsException("Company with ID {$id} does not exist.");
-        }
-
-        if ($this->companyHasAnyDependents($id)) {
-            throw new CompanyHasDependentsException("Cannot delete company {$company->getName()} because it has related data.");
-        }
-
-        try {
-            $this->companyRepository->delete($company);
-        } catch (PDOException $e) {
-            $this->logger->error('Persistence error when deleting company: ' . $e->getMessage());
-            throw new RuntimeException('Error deleting company from database.', 0, $e);
-        } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in CompanyService::deleteCompany: ' . $e->getMessage());
-            throw new RuntimeException('Internal error when deleting the company.', 0, $e);
-        }
     }
 
     private function companyHasAnyDependents(int $companyId): bool

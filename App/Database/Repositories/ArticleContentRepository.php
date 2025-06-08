@@ -13,32 +13,6 @@ class ArticleContentRepository extends Repository
 {
     protected string $table = 'article_contents';
 
-    protected function createEntityFromData(array $data): ArticleContentEntity
-    {
-        try {
-            $companyEntity = ArticleContentEntity::create($data);
-        } catch (InvalidArgumentException $e) {
-            $this->logger->error('Invalid data from database for ArticleContentEntity: ' . $e->getMessage(), ['data' => $data]);
-            throw new RuntimeException('Internal failure: Corrupted data received from database for ArticleContentEntity.', 0, $e);
-        }
-
-        return $companyEntity;
-    }
-
-    protected function mapEntityToData(object $entity): array
-    {
-        /** @var ArticleContentEntity $entity */
-        return [
-            'isActive' => $entity->getIsActive(),
-            'articleId' => $entity->getArticleId(),
-            'type' => $entity->getType(),
-            'title' => $entity->getTitle(),
-            'hideTitle' => $entity->getHideTitle(),
-            'content' => $entity->getContent(),
-            'ordering' => $entity->getOrdering(),
-        ];
-    }
-
     public function existsByCompanyId(int $companyId): bool
     {
         try {
@@ -78,5 +52,31 @@ class ArticleContentRepository extends Repository
 
             throw new RuntimeException('Database connection error when checking company dependents', 0, $e);
         }
+    }
+
+    protected function createEntityFromData(array $data): ArticleContentEntity
+    {
+        try {
+            $companyEntity = ArticleContentEntity::create($data);
+        } catch (InvalidArgumentException $e) {
+            $this->logger->error('Invalid data from database for ArticleContentEntity: ' . $e->getMessage(), ['data' => $data]);
+            throw new RuntimeException('Internal failure: Corrupted data received from database for ArticleContentEntity.', 0, $e);
+        }
+
+        return $companyEntity;
+    }
+
+    protected function mapEntityToData(object $entity): array
+    {
+        /** @var ArticleContentEntity $entity */
+        return [
+            'isActive' => $entity->getIsActive(),
+            'articleId' => $entity->getArticleId(),
+            'type' => $entity->getType(),
+            'title' => $entity->getTitle(),
+            'hideTitle' => $entity->getHideTitle(),
+            'content' => $entity->getContent(),
+            'ordering' => $entity->getOrdering(),
+        ];
     }
 }

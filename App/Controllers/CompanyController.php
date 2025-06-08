@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use Throwable;
 use Core\Library\Twig;
 use Core\Library\Logger;
 use Core\Library\Response;
@@ -10,10 +9,8 @@ use Core\Library\Controller;
 use App\Services\CompanyService;
 use App\Request\CompanyEditFormRequest;
 use App\Request\CompanyCreateFormRequest;
-use App\Exceptions\CompanyNotExistsException;
 use App\Exceptions\CnpjAlreadyExistsException;
 use App\Exceptions\NameAlreadyExistsException;
-use App\Database\Repositories\CompanyRepository;
 use App\Exceptions\CompanyHasDependentsException;
 
 class CompanyController extends Controller
@@ -21,7 +18,6 @@ class CompanyController extends Controller
     public function __construct(
         Twig $twig,
         private Logger $logger,
-        private CompanyRepository $companyRepository,
         private CompanyService $companyService,
     ) {
         parent::__construct($twig, folderView: 'Company');
@@ -29,13 +25,8 @@ class CompanyController extends Controller
 
     public function index(): Response
     {
-        try {
-            $companies = $this->companyRepository->findAll();
-            return $this->render('index.twig', ['companies' => $companies]);
-        } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in CompanyController::index: ' . $e->getMessage());
-            return $this->redirect('/', 'error', 'An unexpected error occurred while loading companies.');
-        }
+        $companies = $this->companyService->findAllCompanies();
+        return $this->render('index.twig', ['companies' => $companies]);
     }
 
     public function create(): Response
@@ -45,78 +36,51 @@ class CompanyController extends Controller
 
     public function edit(int $id): Response
     {
-        try {
-            $company = $this->companyRepository->getCompanyById($id);
-            return $this->render('edit.twig', ['company' => $company]);
-        } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in CompanyController::edit: ' . $e->getMessage());
-            return $this->redirect('/companies', 'error', 'An unexpected error occurred while loading company');
-        }
+        $company = $this->companyService->getCompanyById($id);
+        return $this->render('edit.twig', ['company' => $company]);
     }
 
     public function update(int $id): Response
     {
-        if (!CompanyEditFormRequest::validate($this->request)) {
+        $formRequest = CompanyEditFormRequest::validate($this->request);
+
+        if ($formRequest === null) {
             return $this->redirect('/companies/' . $id);
         }
 
         try {
-            $request = $this->request->getRequest('post')->all();
-
-            $this->companyService->editCompany($id, $request);
-
+            $userData = $formRequest->validated()->all();
+            $this->companyService->editCompany($id, $userData);
             return $this->redirect('/companies/' . $id, 'success', 'Updated successfully!');
         } catch (NameAlreadyExistsException | CnpjAlreadyExistsException $e) {
             return $this->redirect('/companies/' . $id, 'error', $e->getMessage());
-        } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in CompanyController::update: ' . $e->getMessage());
-            return $this->redirect('/companies/' . $id, 'error', 'An unexpected error occurred during company creation.');
+        }
+    }
+
+    public function store(): Response
+    {
+        $formRequest = CompanyCreateFormRequest::validate($this->request);
+
+        if ($formRequest === null) {
+            return $this->redirect('/companies/create');
+        }
+
+        try {
+            $userData = $formRequest->validated()->all();
+            $this->companyService->createCompany($userData);
+            return $this->redirect('/companies', 'success', 'Created successfully!');
+        } catch (NameAlreadyExistsException | CnpjAlreadyExistsException $e) {
+            return $this->redirect('/companies/create', 'error', $e->getMessage());
         }
     }
 
     public function delete(int $id): Response
     {
         try {
-            $this->companyService->deleteCompany($id);
-
+            $this->companyService->deleteCompanyById($id);
             return $this->redirect('/companies', 'success', 'Deleted successfully!');
-        } catch (CompanyNotExistsException $e) {
-            return $this->redirect('/companies', 'error', $e->getMessage());
         } catch (CompanyHasDependentsException $e) {
             return $this->redirect('/companies', 'error', $e->getMessage());
-        } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in CompanyController::delete: ' . $e->getMessage());
-            return $this->redirect('/companies', 'error', 'An unexpected error occurred while deleting the company.');
-        }
-    }
-
-    public function store(): Response
-    {
-        if (!CompanyCreateFormRequest::validate($this->request)) {
-            return $this->redirect('/companies/create');
-        }
-
-        try {
-            $request = $this->request->getRequest('post')->all();
-            $this->companyService->createCompany($request);
-
-            return $this->redirect('/companies', 'success', 'Created successfully!');
-        } catch (NameAlreadyExistsException | CnpjAlreadyExistsException $e) {
-            return $this->redirect('/companies/create', 'error', $e->getMessage());
-        } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in CompanyController::store: ' . $e->getMessage());
-            return $this->redirect('/companies', 'error', 'An unexpected error occurred during company creation.');
-        }
-    }
-
-    public function show(int $id): Response
-    {
-        try {
-            $company = $this->companyRepository->getCompanyById($id);
-            return $this->render('show.twig', ['company' => $company]);
-        } catch (Throwable $e) {
-            $this->logger->error('Unexpected error in CompanyController::show: ' . $e->getMessage());
-            return $this->redirect('/', 'error', 'An unexptected error occurred while loading company.');
         }
     }
 }

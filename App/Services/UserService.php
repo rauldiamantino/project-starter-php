@@ -48,16 +48,25 @@ class UserService
             $entity = UserEntity::create($data);
         } catch (InvalidArgumentException $e) {
             $this->logger->error('Failed to create UserEntity due to invalid data: ' . $e->getMessage(), ['data' => $data]);
-
             throw new RuntimeException('Internal error: invalid data provided for user entity creation.', 0, $e);
         }
 
-        $insertedId = $this->userRepository->create($entity);
+        return $this->userRepository->createUser($entity);
+    }
 
-        if ($insertedId <= 0) {
-            throw new RuntimeException('Internal error when persisting user in database');
-        }
+    public function findAllUsers(): array
+    {
+        return $this->userRepository->findAllUsers();
+    }
 
-        return $entity;
+    public function getUserById(int $id): Entity
+    {
+        return $this->userRepository->getUserById($id);
+    }
+
+    public function deleteUserById(int $id): void
+    {
+        $user = $this->userRepository->getUserById($id);
+        $this->userRepository->deleteUser($user);
     }
 }

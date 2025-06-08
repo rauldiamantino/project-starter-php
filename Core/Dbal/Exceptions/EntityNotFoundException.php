@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Dbal\exceptions;
+namespace Core\Dbal\Exceptions;
 
 use Exception;
 

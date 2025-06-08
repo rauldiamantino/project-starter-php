@@ -37,9 +37,4 @@ class ArticleRepository extends Repository
             'ordering' => $entity->getOrdering(),
         ];
     }
-
-    public function getCategoryById(int $id): ArticleEntity
-    {
-        return $this->findById($id);
-    }
 }

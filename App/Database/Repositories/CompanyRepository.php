@@ -13,30 +13,32 @@ class CompanyRepository extends Repository
 {
     protected string $table = 'companies';
 
-    protected function createEntityFromData(array $data): CompanyEntity
+    public function createCompany(CompanyEntity $entity): CompanyEntity
     {
-        try {
-            $companyEntity = CompanyEntity::create($data);
-        } catch (InvalidArgumentException $e) {
-            $this->logger->error('Invalid data from database for CompanyEntity: ' . $e->getMessage(), ['data' => $data]);
-            throw new RuntimeException('Internal failure: Corrupted data received from database for CompanyEntity.', 0, $e);
-        }
-
-        return $companyEntity;
+        return $this->create($entity);
     }
 
-    protected function mapEntityToData(object $entity): array
+    public function deleteCompany(CompanyEntity $entity): void
     {
-        /** @var CompanyEntity $entity */
-        return [
-            'is_active' => $entity->getIsActive(),
-            'name' => $entity->getName(),
-            'cnpj' => $entity->getCnpj(),
-            'slug' => $entity->getSlug(),
-        ];
+        $this->delete($entity);
+    }
+
+    public function updateCompany(CompanyEntity $entity): void
+    {
+        $this->update($entity);
+    }
+
+    public function findAllCompanies(): array
+    {
+        return $this->findAll();
     }
 
     public function getCompanyById(int $id): CompanyEntity
+    {
+        return $this->getById($id);
+    }
+
+    public function findCompanyById(int $id): ?CompanyEntity
     {
         return $this->findById($id);
     }
@@ -51,7 +53,7 @@ class CompanyRepository extends Repository
                 ->where('cnpj = :cnpj')
                 ->setParameter('cnpj', $cnpj);
 
-            if ($id) {
+            if ($id !== null) {
                 $queryBuilder->andWhere('id != :id')
                         ->setParameter('id', (int) $id);
             }
@@ -86,7 +88,7 @@ class CompanyRepository extends Repository
                 ->where('name = :name')
                 ->setParameter('name', $name);
 
-            if ($id) {
+            if ($id !== null) {
                 $queryBuilder->andWhere('id != :id')
                         ->setParameter('id', (int) $id);
             }
@@ -122,15 +124,36 @@ class CompanyRepository extends Repository
                 ->setParameter('slug', $slug)
                 ->fetchOne();
 
-            return $count > 0;
+            return (int) $count > 0;
         } catch (DBALException $e) {
             $this->logger->error('DBAL Error in Company::slugExists: ' . $e->getMessage(), ['slug' => $slug]);
-
             throw new RuntimeException('Database error while checking slug existence.', 0, $e);
         } catch (PDOException $e) {
             $this->logger->critical('PDO Error in Company::slugExists: ' . $e->getMessage(), ['slug' => $slug]);
-
             throw new RuntimeException('Database connection error while checking slug existence.', 0, $e);
         }
+    }
+
+    protected function createEntityFromData(array $data): CompanyEntity
+    {
+        try {
+            $companyEntity = CompanyEntity::create($data);
+        } catch (InvalidArgumentException $e) {
+            $this->logger->error('Invalid data from database for CompanyEntity: ' . $e->getMessage(), ['data' => $data]);
+            throw new RuntimeException('Internal failure: Corrupted data received from database for CompanyEntity.', 0, $e);
+        }
+
+        return $companyEntity;
+    }
+
+    protected function mapEntityToData(object $entity): array
+    {
+        /** @var CompanyEntity $entity */
+        return [
+            'is_active' => $entity->getIsActive(),
+            'name' => $entity->getName(),
+            'cnpj' => $entity->getCnpj(),
+            'slug' => $entity->getSlug(),
+        ];
     }
 }

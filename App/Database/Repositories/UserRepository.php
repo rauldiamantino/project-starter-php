@@ -2,7 +2,6 @@
 
 namespace App\Database\Repositories;
 
-use Core\Dbal\Entity;
 use Core\Dbal\Repository;
 use Core\Dbal\AuthInterface;
 use Core\Dbal\Exceptions\EntityNotFoundException;
@@ -16,33 +15,32 @@ class UserRepository extends Repository implements AuthInterface
 {
     protected string $table = 'users';
 
-    protected function createEntityFromData(array $data): UserEntity
+    public function createUser(UserEntity $entity): UserEntity
     {
-        try {
-            $userEntity = UserEntity::create($data);
-        } catch (InvalidArgumentException $e) {
-            $this->logger->error('Invalid data from database for UserEntity: ' . $e->getMessage(), ['data' => $data]);
-
-            throw new RuntimeException('Internal failure: Corrupted data received from database for UserEntity.', 0, $e);
-        }
-
-        return $userEntity;
+        return $this->create($entity);
     }
 
-    protected function mapEntityToData(object $entity): array
+    public function deleteUser(UserEntity $entity): void
     {
-        /** @var UserEntity $entity */
-        return [
-            'is_active' => $entity->getIsActive(),
-            'name' => $entity->getName(),
-            'email' => $entity->getEmail(),
-            'password' => $entity->getPassword(),
-            'company_id' => $entity->getCompanyId(),
-            'level' => $entity->getLevel(),
-        ];
+        $this->delete($entity);
+    }
+
+    public function updateUser(UserEntity $entity): void
+    {
+        $this->update($entity);
+    }
+
+    public function findAllUsers(): array
+    {
+        return $this->findAll();
     }
 
     public function getUserById(int $id): UserEntity
+    {
+        return $this->getById($id);
+    }
+
+    public function findUserById(int $id): ?UserEntity
     {
         return $this->findById($id);
     }
@@ -102,7 +100,6 @@ class UserRepository extends Repository implements AuthInterface
 
             if ($selected === false || empty($selected)) {
                 $this->logger->info("Authentication attempt for email '{$email}' failed: User not found.");
-
                 throw new EntityNotFoundException("User with email '{$email}' not found.");
             }
 
@@ -128,5 +125,30 @@ class UserRepository extends Repository implements AuthInterface
 
             throw new RuntimeException("Database connection error during authentication for email '{$email}'.", 0, $e);
         }
+    }
+
+    protected function createEntityFromData(array $data): UserEntity
+    {
+        try {
+            $userEntity = UserEntity::create($data);
+        } catch (InvalidArgumentException $e) {
+            $this->logger->error('Invalid data from database for UserEntity: ' . $e->getMessage(), ['data' => $data]);
+            throw new RuntimeException('Internal failure: Corrupted data received from database for UserEntity.', 0, $e);
+        }
+
+        return $userEntity;
+    }
+
+    protected function mapEntityToData(object $entity): array
+    {
+        /** @var UserEntity $entity */
+        return [
+            'is_active' => $entity->getIsActive(),
+            'name' => $entity->getName(),
+            'email' => $entity->getEmail(),
+            'password' => $entity->getPassword(),
+            'company_id' => $entity->getCompanyId(),
+            'level' => $entity->getLevel(),
+        ];
     }
 }

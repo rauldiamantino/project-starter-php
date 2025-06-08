@@ -3,7 +3,7 @@
 namespace Core\Dbal;
 
 use Core\Dbal\Entity;
-use Core\Dbal\exceptions\EntityNotFoundException;
+use Core\Dbal\Exceptions\EntityNotFoundException;
 use Core\Library\Logger;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception as DBALException;
@@ -24,9 +24,9 @@ abstract class Repository
 
     abstract protected function mapEntityToData(object $entity): array;
 
-    public function create(Entity $entity): Entity
+    protected function create(Entity $entity): Entity
     {
-        if (property_exists($entity, 'id') && $entity->getId() !== null) {
+        if ($entity->getId() !== null) {
             throw new RuntimeException('Cannot create an entity that already has an ID. Use update() instead.');
         }
 
@@ -37,7 +37,6 @@ abstract class Repository
 
             if ($result === 0) {
                 $this->logger->error('Failed to insert record into database, 0 rows affected.', ['table' => $this->table, 'entity_data' => $dataToInsert]);
-
                 throw new RuntimeException('Failed to insert the record into the database.');
             }
 
@@ -48,42 +47,37 @@ abstract class Repository
             return $this->createEntityFromData($entityDataForReturn);
         } catch (DBALException $e) {
             $this->logger->error('DBAL Error in ' . static::class . '::create: ' . $e->getMessage(), ['table' => $this->table]);
-
             throw new RuntimeException("Database error while creating entity in table '{$this->table}'.", 0, $e);
         } catch (PDOException $e) {
             $this->logger->critical('PDO Error in ' . static::class . '::create: ' . $e->getMessage(), ['table' => $this->table]);
-
             throw new RuntimeException("Database connection error while creating entity in table '{$this->table}'.", 0, $e);
         }
     }
 
-    public function update(Entity $entity): void
+    protected function update(Entity $entity): void
     {
-        if (!property_exists($entity, 'id') || $entity->getId() === null) {
-            throw new RuntimeException("Cannot update an entity without an ID. Use create() for new entities.");
+        if ($entity->getId() === null) {
+            $this->logger->warning('Entity must have a valid ID.', ['table' => $this->table]);
+            throw new RuntimeException('Entity must have a valid ID.');
         }
 
         try {
             $dataToUpdate = $this->mapEntityToData($entity);
-
             $this->connection->update($this->table, $dataToUpdate, ['id' => $entity->getId()]);
         } catch (DBALException $e) {
             $this->logger->error('DBAL Error in ' . static::class . '::update: ' . $e->getMessage(), ['table' => $this->table]);
-
             throw new RuntimeException("Database error while updating entity in table '{$this->table}'.", 0, $e);
         } catch (PDOException $e) {
             $this->logger->critical('PDO Error in ' . static::class . '::update: ' . $e->getMessage(), ['table' => $this->table]);
-
             throw new RuntimeException("Database connection error while updating entity in table '{$this->table}'.", 0, $e);
         }
     }
 
-    public function delete(Entity $entity): void
+    protected function delete(Entity $entity): void
     {
-        if (!property_exists($entity, 'id') || $entity->getId() === null) {
-            $this->logger->warning('Attempted to delete an entity without an ID.', ['table' => $this->table]);
-
-            throw new RuntimeException('Cannot delete an entity without an ID.');
+        if ($entity->getId() === null) {
+            $this->logger->warning('Entity must have a valid ID.', ['table' => $this->table]);
+            throw new RuntimeException('Entity must have a valid ID.');
         }
 
         try {
@@ -94,16 +88,14 @@ abstract class Repository
             }
         } catch (DBALException $e) {
             $this->logger->error('DBAL Error in ' . static::class . '::delete: ' . $e->getMessage(), ['table' => $this->table]);
-
             throw new RuntimeException("Database error while deleting entity with ID '{$entity->getId()}' from table '{$this->table}'.", 0, $e);
         } catch (PDOException $e) {
             $this->logger->critical('PDO Error in ' . static::class . '::delete: ' . $e->getMessage(), ['table' => $this->table]);
-
             throw new RuntimeException("Database connection error while deleting entity with ID '{$entity->getId()}' from table '{$this->table}'.", 0, $e);
         }
     }
 
-    public function findById(int $id): Entity
+    protected function getById(int $id): Entity
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
@@ -122,16 +114,35 @@ abstract class Repository
             return $this->createEntityFromData($selected);
         } catch (DBALException $e) {
             $this->logger->error('DBAL Error in Repository::findById: ' . $e->getMessage(), ['table' => $this->table]);
-
             throw new RuntimeException("Database error while fetching entity with ID '{$id}'.", 0, $e);
         } catch (PDOException $e) {
             $this->logger->error('PDO Error in Repository::findById: ' . $e->getMessage(), ['table' => $this->table]);
-
             throw new RuntimeException("Database connecition error while fetching entity with ID '{$id}'.", 0, $e);
         }
     }
 
-    public function findAll(array $orderBy = []): array
+    protected function findById(int $id): ?Entity
+    {
+        try {
+            $queryBuilder = $this->connection->createQueryBuilder();
+
+            $selected = $queryBuilder->select('*')
+                ->from($this->table)
+                ->where('id = :id')
+                ->setParameter('id', $id)
+                ->fetchAssociative();
+
+            return $selected ? $this->createEntityFromData($selected) : null;
+        } catch (DBALException $e) {
+            $this->logger->error('DBAL Error in Repository::findById: ' . $e->getMessage(), ['table' => $this->table]);
+            throw new RuntimeException("Database error while fetching entity with ID '{$id}'.", 0, $e);
+        } catch (PDOException $e) {
+            $this->logger->error('PDO Error in Repository::findById: ' . $e->getMessage(), ['table' => $this->table]);
+            throw new RuntimeException("Database connecition error while fetching entity with ID '{$id}'.", 0, $e);
+        }
+    }
+
+    protected function findAll(array $orderBy = []): array
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
@@ -154,16 +165,14 @@ abstract class Repository
             return $entities;
         } catch (DBALException $e) {
             $this->logger->error('DBAL Error in Repository::findAll: ' . $e->getMessage(), ['table' => $this->table]);
-
             throw new RuntimeException('Database error while fetching all records.', 0, $e);
         } catch (PDOException $e) {
             $this->logger->critical('PDO Error in Repository::findAll: ' . $e->getMessage(), ['table' => $this->table]);
-
             throw new RuntimeException('Database connection error while fetching all records.', 0, $e);
         }
     }
 
-    public function existsByCompanyId(int $companyId): bool
+    protected function existsByCompanyId(int $companyId): bool
     {
         try {
             $queryBuilder = $this->connection->createQueryBuilder();
@@ -177,7 +186,7 @@ abstract class Repository
             return (int) $count > 0;
         } catch (DBALException $e) {
             $this->logger->error(
-                'DBAL Error in Repository::companyHasDependents: ' . $e->getMessage(),
+                'DBAL Error in Repository::existsByCompanyId: ' . $e->getMessage(),
                 [
                     'table' => $this->table,
                     'companyId' => $companyId,
@@ -187,7 +196,7 @@ abstract class Repository
             throw new RuntimeException('Database error while checking companyId', 0, $e);
         } catch (PDOException $e) {
             $this->logger->critical(
-                'PDO Error in Repository::companyHasDependents: ' . $e->getMessage(),
+                'PDO Error in Repository::existsByCompanyId: ' . $e->getMessage(),
                 [
                     'table' => $this->table,
                     'companyId' => $companyId,

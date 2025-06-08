@@ -4,7 +4,6 @@ namespace App\Database\Repositories;
 
 use Core\Dbal\Repository;
 use App\Database\Entities\CategoryEntity;
-use PDOException;
 use InvalidArgumentException;
 use RuntimeException;
 use Doctrine\DBAL\Exception as DBALException;
