@@ -16,6 +16,8 @@ This means the code is split into clear layers, making it easier to maintain, re
 * Simple and efficient routing with FastRoute
 * Single entry point (`public/index.php`)
 * Perfect for creating **APIs**, **admin panels**, or **SaaS systems**
+* **Doctrine Migrations** for robust database schema management
+* A **global exception handler** to catch and manage unmapped exceptions
 
 > The Model is structured in a modern way, with clear separation of responsibilities among Entities (data), Repositories (database access), and Services (business logic).
 
@@ -26,6 +28,7 @@ This means the code is split into clear layers, making it easier to maintain, re
 * **PHP 8.3.13**
 * **Composer** – Dependency Manager
 * [**Doctrine DBAL**](https://www.doctrine-project.org/projects/dbal.html) – Database communication
+* [**Doctrine Migrations**](https://www.doctrine-project.org/projects/migrations.html) – Database schema management
 * [**PHP-DI**](https://php-di.org/) – Dependency Injection
 * [**FastRoute**](https://github.com/nikic/FastRoute) – Lightweight and fast router
 * [**Twig**](https://twig.symfony.com/) – Template Engine (HTML)
@@ -42,8 +45,9 @@ This means the code is split into clear layers, making it easier to maintain, re
 │   ├── Controllers/            # Controllers (application entry logic)
 │   ├── Database/
 │   │   ├── Entities/           # Table representations (data model)
+│   │   ├── Migrations/         # Doctrine Migration files
 │   │   └── Repositories/       # Database queries and access
-│   ├── Exceptions/             # Custom application exceptions
+│   ├── Exceptions/             # Custom application exceptions and global handler
 │   ├── Functions/              # Helper functions (e.g., Twig integration)
 │   ├── Request/                # Form validations and input rules
 │   ├── Routes/                 # Route definition files
@@ -66,7 +70,9 @@ This means the code is split into clear layers, making it easier to maintain, re
 │   └── Logs/                   # Application logs
 │
 ├── .env.example                # Environment configuration example
+├── cli-config.php              # Doctrine CLI configuration
 ├── composer.json               # Autoload and dependencies
+├── migrations.php              # Doctrine Migrations configuration
 ```
 
 ---
@@ -91,9 +97,14 @@ This means the code is split into clear layers, making it easier to maintain, re
 
 4.  Edit `.env` with your database and environment settings.
 
-5.  Point your local server (Apache or Nginx) to the `public/` folder.
+5.  Run Doctrine Migrations to set up your database schema:
+    ```bash
+    php vendor/bin/doctrine-migrations migrate
+    ```
 
-6.  You're all set! Time to start developing 🚀
+6.  Point your local server (Apache or Nginx) to the `public/` folder.
+
+7.  You're all set! Time to start developing 🚀
 
 ---
 
