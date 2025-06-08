@@ -20,4 +20,3 @@ try {
     header('Location: /500');
     exit;
 }
-
