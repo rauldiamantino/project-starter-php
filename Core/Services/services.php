@@ -4,7 +4,6 @@ use Core\Library\Twig;
 use Core\Dbal\Connection;
 use Core\Library\Logger;
 use Core\Library\Request;
-
 use Twig\Extension\DebugExtension;
 use Doctrine\DBAL\Connection as DBALConnection;
 

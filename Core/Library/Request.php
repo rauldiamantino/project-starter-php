@@ -3,7 +3,6 @@
 namespace Core\Library;
 
 use Exception;
-
 use Core\Library\Sanitize;
 
 class Request

@@ -29,6 +29,7 @@ function pr(mixed $value, bool $dump = true)
     echo '</pre>';
 }
 
-function onlyNumbers(string $value): string {
+function onlyNumbers(string $value): string
+{
     return preg_replace('/\D/', '', $value);
 }

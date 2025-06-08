@@ -4,12 +4,13 @@ namespace Core\Library;
 
 use Core\Library\Session;
 use Core\Dbal\Exceptions\EntityNotFoundException;
-
 use App\Database\Repositories\UserRepository;
 
 class Auth
 {
-    public function __construct(private UserRepository $userRepository) {}
+    public function __construct(private UserRepository $userRepository)
+    {
+    }
 
     public function attempt(array $data): bool
     {

@@ -11,7 +11,9 @@ abstract class Controller
 {
     protected Request $request;
 
-    public function __construct(private Twig $twig, protected string $folderView = '') {}
+    public function __construct(private Twig $twig, protected string $folderView = '')
+    {
+    }
 
     public function setRequest(Request $request)
     {

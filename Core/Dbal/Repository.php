@@ -5,10 +5,8 @@ namespace Core\Dbal;
 use Core\Dbal\Entity;
 use Core\Dbal\exceptions\EntityNotFoundException;
 use Core\Library\Logger;
-
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception as DBALException;
-
 use PDOException;
 use RuntimeException;
 
@@ -19,7 +17,8 @@ abstract class Repository
     public function __construct(
         protected Connection $connection,
         protected Logger $logger
-    ) {}
+    ) {
+    }
 
     abstract protected function createEntityFromData(array $data): Entity;
 
