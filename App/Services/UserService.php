@@ -4,7 +4,6 @@ namespace App\Services;
 
 use Core\Dbal\Entity;
 use Core\Dbal\Exceptions\EntityNotFoundException;
-
 use App\Database\Entities\UserEntity;
 use App\Database\Repositories\UserRepository;
 use App\Exceptions\CompanyNotExistsException;
@@ -17,9 +16,9 @@ use InvalidArgumentException;
 class UserService
 {
     public function __construct(
-      private UserRepository $userRepository, 
-      private CompanyRepository $companyRepository,
-      private Logger $logger,
+        private UserRepository $userRepository,
+        private CompanyRepository $companyRepository,
+        private Logger $logger,
     ) {
     }
 
@@ -49,7 +48,7 @@ class UserService
             $entity = UserEntity::create($data);
         } catch (InvalidArgumentException $e) {
             $this->logger->error('Failed to create UserEntity due to invalid data: ' . $e->getMessage(), ['data' => $data]);
-            
+
             throw new RuntimeException('Internal error: invalid data provided for user entity creation.', 0, $e);
         }
 

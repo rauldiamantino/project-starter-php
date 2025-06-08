@@ -85,12 +85,12 @@ class CompanyRepository extends Repository
                 ->from($this->table)
                 ->where('name = :name')
                 ->setParameter('name', $name);
-            
+
             if ($id) {
                 $queryBuilder->andWhere('id != :id')
                         ->setParameter('id', (int) $id);
             }
-            
+
             $count = $queryBuilder->fetchOne();
 
             return (int) $count > 0;

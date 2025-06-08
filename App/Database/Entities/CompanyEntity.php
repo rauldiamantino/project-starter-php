@@ -14,7 +14,8 @@ class CompanyEntity extends Entity
         private string $name,
         private ?string $createdAt = null,
         private ?string $updatedAt = null
-    ) {}
+    ) {
+    }
 
     public static function create(array $properties): Entity
     {

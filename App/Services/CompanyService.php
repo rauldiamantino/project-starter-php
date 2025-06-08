@@ -5,10 +5,8 @@ namespace App\Services;
 use Throwable;
 use PDOException;
 use RuntimeException;
-
 use Core\Library\Logger;
 use Core\Utils\SlugGenerator;
-
 use InvalidArgumentException;
 use App\Database\Entities\CompanyEntity;
 use App\Database\Repositories\UserRepository;
@@ -30,7 +28,8 @@ class CompanyService
         private UserRepository $userRepository,
         private ArticleRepository $articleRepository,
         private ArticleContentRepository $articleContentRepository,
-    ) {}
+    ) {
+    }
 
     public function createCompany(array $companyData): CompanyEntity
     {

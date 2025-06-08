@@ -16,7 +16,8 @@ class UserEntity extends Entity
         private int $level,
         private ?string $createdAt = null,
         private ?string $updatedAt = null
-    ) {}
+    ) {
+    }
 
     public static function create(array $properties): Entity
     {

@@ -17,7 +17,8 @@ class ArticleContentEntity extends Entity
         private int $ordering,
         private ?string $createdAt = null,
         private ?string $updatedAt = null,
-    ) {}
+    ) {
+    }
 
     public static function create(array $properties): Entity
     {
@@ -116,7 +117,7 @@ class ArticleContentEntity extends Entity
     }
 
     // Setters
-     public function setIsActive(int $isActive): void
+    public function setIsActive(int $isActive): void
     {
         $this->isActive = $isActive;
     }

@@ -8,7 +8,6 @@ use Core\Library\Response;
 use Core\Library\Controller;
 use Core\Dbal\Exceptions\EntityNotFoundException;
 use Throwable;
-
 use App\Services\UserService;
 use App\Request\UserCreateFormRequest;
 use App\Database\Repositories\UserRepository;

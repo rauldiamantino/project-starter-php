@@ -17,7 +17,8 @@ class CategoryEntity extends Entity
         private int $ordering,
         private ?string $createdAt = null,
         private ?string $updatedAt = null,
-    ) {}
+    ) {
+    }
 
     public static function create(array $properties): Entity
     {

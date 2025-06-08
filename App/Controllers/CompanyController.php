@@ -3,12 +3,10 @@
 namespace App\Controllers;
 
 use Throwable;
-
 use Core\Library\Twig;
 use Core\Library\Logger;
 use Core\Library\Response;
 use Core\Library\Controller;
-
 use App\Services\CompanyService;
 use App\Request\CompanyEditFormRequest;
 use App\Request\CompanyCreateFormRequest;
@@ -57,7 +55,7 @@ class CompanyController extends Controller
     }
 
     public function update(int $id): Response
-    { 
+    {
         if (!CompanyEditFormRequest::validate($this->request)) {
             return $this->redirect('/companies/' . $id);
         }

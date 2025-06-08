@@ -1,7 +1,6 @@
 <?php
 
 use Core\Library\Router;
-
 use App\Controllers\HomeController;
 use App\Controllers\UserController;
 use App\Controllers\CompanyController;

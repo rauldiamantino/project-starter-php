@@ -6,11 +6,9 @@ use Core\Dbal\Entity;
 use Core\Dbal\Repository;
 use Core\Dbal\AuthInterface;
 use Core\Dbal\Exceptions\EntityNotFoundException;
-
 use PDOException;
 use InvalidArgumentException;
 use RuntimeException;
-
 use Doctrine\DBAL\Exception as DBALException;
 use App\Database\Entities\UserEntity;
 
