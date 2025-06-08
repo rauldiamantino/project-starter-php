@@ -29,7 +29,7 @@ class UserService
         } catch (EntityNotFoundException $e) {
             throw new CompanyNotExistsException('This company does not exists');
         }
-        
+
         $data = [
           'name' => $userData['name'],
           'is_active' => 1,
@@ -62,7 +62,7 @@ class UserService
         $entity->setLevel($userData['level']);
         $entity->setUpdatedAt(date('Y-m-d H:i:s'));
         $this->userRepository->updateUser($entity);
-        
+
         return $entity;
     }
 
