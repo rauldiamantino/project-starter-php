@@ -1,6 +1,6 @@
 <?php 
 
-namespace App\Database\Interfaces;
+namespace App\Database\Repositories\Interfaces;
 
 interface ArticleContentRepositoryInterface
 {
