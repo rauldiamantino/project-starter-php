@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Database\Repositories;
+namespace App\Database\Repositories\Implementations\Doctrine;
 
-use Core\Dbal\Repository;
 use Core\Dbal\AuthInterface;
 use Core\Dbal\Exceptions\EntityNotFoundException;
 use PDOException;
@@ -10,8 +9,10 @@ use InvalidArgumentException;
 use RuntimeException;
 use Doctrine\DBAL\Exception as DBALException;
 use App\Database\Entities\UserEntity;
+use App\Database\Repositories\Interfaces\UserRepositoryInterface;
+use Core\Database\Implementations\DoctrineDbal\AbstractRepositoryDoctrine;
 
-class UserRepository extends Repository implements AuthInterface
+class UserRepositoryDoctrine extends AbstractRepositoryDoctrine implements AuthInterface, UserRepositoryInterface
 {
     protected string $table = 'users';
 

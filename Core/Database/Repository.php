@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Core\Database;
 
@@ -16,5 +16,3 @@ abstract class Repository
     // abstract protected function mapToStorageFormat(object $entity): mixed;
     // abstract protected function mapFromStorageFormat(mixed $rawData): Entity;
 }
-
-

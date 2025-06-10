@@ -9,7 +9,6 @@ use Core\Library\Logger;
 use Core\Utils\SlugGenerator;
 use InvalidArgumentException;
 use App\Database\Entities\CompanyEntity;
-use App\Database\Repositories\UserRepository;
 use App\Exceptions\CompanyNotExistsException;
 use App\Exceptions\CnpjAlreadyExistsException;
 use App\Exceptions\NameAlreadyExistsException;
@@ -18,6 +17,7 @@ use App\Database\Repositories\CompanyRepository;
 use App\Database\Repositories\CategoryRepository;
 use App\Exceptions\CompanyHasDependentsException;
 use App\Database\Repositories\ArticleContentRepository;
+use App\Database\Repositories\Interfaces\UserRepositoryInterface;
 
 class CompanyService
 {
@@ -25,7 +25,7 @@ class CompanyService
         private CompanyRepository $companyRepository,
         private Logger $logger,
         private CategoryRepository $categoryRepository,
-        private UserRepository $userRepository,
+        private UserRepositoryInterface $userRepositoryInterface,
         private ArticleRepository $articleRepository,
         private ArticleContentRepository $articleContentRepository,
     ) {
@@ -131,7 +131,7 @@ class CompanyService
     private function companyHasAnyDependents(int $companyId): bool
     {
         $repositoriesToCheck = [
-            $this->userRepository,
+            $this->userRepositoryInterface,
             $this->categoryRepository,
             $this->articleRepository,
             $this->articleContentRepository,
