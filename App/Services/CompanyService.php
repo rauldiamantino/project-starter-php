@@ -12,12 +12,12 @@ use App\Database\Entities\CompanyEntity;
 use App\Exceptions\CompanyNotExistsException;
 use App\Exceptions\CnpjAlreadyExistsException;
 use App\Exceptions\NameAlreadyExistsException;
-use App\Database\Repositories\ArticleRepository;
 use App\Database\Repositories\CategoryRepository;
 use App\Exceptions\CompanyHasDependentsException;
-use App\Database\Repositories\Interfaces\ArticleContentRepositoryInterface;
-use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
 use App\Database\Repositories\Interfaces\UserRepositoryInterface;
+use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
+use App\Database\Repositories\Interfaces\ArticleRepositoryInterface;
+use App\Database\Repositories\Interfaces\ArticleContentRepositoryInterface;
 
 class CompanyService
 {
@@ -26,7 +26,7 @@ class CompanyService
         private CompanyRepositoryInterface $companyRepositoryInterface,
         private CategoryRepository $categoryRepository,
         private UserRepositoryInterface $userRepositoryInterface,
-        private ArticleRepository $articleRepository,
+        private ArticleRepositoryInterface $articleRepositoryInterface,
         private ArticleContentRepositoryInterface $articleContentRepositoryInterface,
     ) {
     }
@@ -133,7 +133,7 @@ class CompanyService
         $repositoriesToCheck = [
             $this->userRepositoryInterface,
             $this->categoryRepository,
-            $this->articleRepository,
+            $this->articleRepositoryInterface,
             $this->articleContentRepositoryInterface,
         ];
 
