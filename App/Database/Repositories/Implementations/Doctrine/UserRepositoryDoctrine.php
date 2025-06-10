@@ -2,15 +2,15 @@
 
 namespace App\Database\Repositories\Implementations\Doctrine;
 
-use Core\Dbal\AuthInterface;
-use Core\Dbal\Exceptions\EntityNotFoundException;
 use PDOException;
-use InvalidArgumentException;
 use RuntimeException;
-use Doctrine\DBAL\Exception as DBALException;
+use Core\Dbal\AuthInterface;
+use InvalidArgumentException;
 use App\Database\Entities\UserEntity;
+use Doctrine\DBAL\Exception as DBALException;
+use Core\Dbal\Exceptions\EntityNotFoundException;
 use App\Database\Repositories\Interfaces\UserRepositoryInterface;
-use Core\Database\Implementations\DoctrineDbal\AbstractRepositoryDoctrine;
+use Core\Database\Implementations\Doctrine\AbstractRepositoryDoctrine;
 
 class UserRepositoryDoctrine extends AbstractRepositoryDoctrine implements AuthInterface, UserRepositoryInterface
 {

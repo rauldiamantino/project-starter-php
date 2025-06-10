@@ -2,13 +2,13 @@
 
 namespace App\Database\Repositories\Implementations\Doctrine;
 
-use Core\Dbal\Repository;
+use RuntimeException;
+use InvalidArgumentException;
 use App\Database\Entities\ArticleEntity;
 use App\Database\Repositories\Interfaces\ArticleRepositoryInterface;
-use InvalidArgumentException;
-use RuntimeException;
+use Core\Database\Implementations\Doctrine\AbstractRepositoryDoctrine;
 
-class ArticleRepositoryDoctrine extends Repository implements ArticleRepositoryInterface
+class ArticleRepositoryDoctrine extends AbstractRepositoryDoctrine implements ArticleRepositoryInterface
 {
     protected string $table = 'categories';
 
