@@ -2,7 +2,7 @@
 
 namespace App\Database\Entities;
 
-use Core\Dbal\Entity;
+use Core\Database\Entity;
 use InvalidArgumentException;
 
 class CompanyEntity extends Entity

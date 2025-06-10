@@ -1,16 +1,16 @@
 <?php
 
-namespace Core\Dbal;
+namespace Core\Database\Implementations\Doctrine;
 
-use Core\Dbal\Entity;
-use Core\Dbal\Exceptions\EntityNotFoundException;
-use Core\Library\Logger;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception as DBALException;
 use PDOException;
+use Core\Database\Entity;
 use RuntimeException;
+use Core\Library\Logger;
+use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\DBAL\Connection;
+use Core\Database\Exceptions\EntityNotFoundException;
 
-abstract class Repository
+abstract class AbstractRepositoryDoctrine
 {
     protected string $table;
 

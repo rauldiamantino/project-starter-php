@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Database\Repositories;
+namespace App\Database\Repositories\Implementations\Doctrine;
 
 use PDOException;
 use RuntimeException;
-use Core\Dbal\Repository;
 use InvalidArgumentException;
 use Doctrine\DBAL\Exception as DBALException;
 use App\Database\Entities\ArticleContentEntity;
+use Core\Database\Implementations\Doctrine\AbstractRepositoryDoctrine;
+use App\Database\Repositories\Interfaces\ArticleContentRepositoryInterface;
 
-class ArticleContentRepository extends Repository
+class ArticleContentRepositoryDoctrine extends AbstractRepositoryDoctrine implements ArticleContentRepositoryInterface
 {
     protected string $table = 'article_contents';
 

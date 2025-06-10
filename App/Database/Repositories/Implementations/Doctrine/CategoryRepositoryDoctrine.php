@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Database\Repositories;
+namespace App\Database\Repositories\Implementations\Doctrine;
 
-use Core\Dbal\Repository;
-use App\Database\Entities\CategoryEntity;
-use InvalidArgumentException;
 use RuntimeException;
-use Doctrine\DBAL\Exception as DBALException;
+use InvalidArgumentException;
+use App\Database\Entities\CategoryEntity;
+use App\Database\Repositories\Interfaces\CategoryRepositoryInterface;
+use Core\Database\Implementations\Doctrine\AbstractRepositoryDoctrine;
 
-class CategoryRepository extends Repository
+class CategoryRepositoryDoctrine extends AbstractRepositoryDoctrine implements CategoryRepositoryInterface
 {
     protected string $table = 'categories';
 

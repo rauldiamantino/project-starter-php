@@ -3,7 +3,7 @@
 require_once '../vendor/autoload.php';
 
 use App\Exceptions\CompanyNotExistsException;
-use Core\Dbal\Exceptions\EntityNotFoundException;
+use Core\Database\Exceptions\EntityNotFoundException;
 
 session_start();
 require_once '../App/Config/bootstrap.php';
