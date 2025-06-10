@@ -29,7 +29,7 @@ This README was not written 100% in English by me, as I am still developing my l
 
 However, I translated it to make this repository accessible to people from all over the world.
 
-I do not guarantee this is the best way to start your projects — you may find situations that are not best practices.
+I do not guarantee this is the best way to start your projects, you may find situations that are not best practices.
 
 What I can say for sure is that I put together everything I know combined with the application of studies I have done.
 
