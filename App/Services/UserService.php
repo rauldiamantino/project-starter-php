@@ -2,15 +2,15 @@
 
 namespace App\Services;
 
-use Core\Dbal\Entity;
 use RuntimeException;
-use Core\Library\Logger;
 use InvalidArgumentException;
 use App\Database\Entities\UserEntity;
 use App\Exceptions\CompanyNotExistsException;
 use App\Exceptions\EmailAlreadyExistsException;
 use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
 use App\Database\Repositories\Interfaces\UserRepositoryInterface;
+use Core\Dbal\Entity;
+use Core\Library\Logger;
 use Core\Dbal\Exceptions\EntityNotFoundException;
 
 class UserService
