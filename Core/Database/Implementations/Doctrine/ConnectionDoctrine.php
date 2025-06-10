@@ -1,10 +1,10 @@
 <?php
 
-namespace Core\Dbal;
+namespace Core\Database\Implementations\Doctrine;
 
 use Doctrine\DBAL\DriverManager;
 
-class Connection
+class ConnectionDoctrine
 {
     public static function create()
     {

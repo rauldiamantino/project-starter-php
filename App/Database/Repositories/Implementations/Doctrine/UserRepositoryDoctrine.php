@@ -4,11 +4,11 @@ namespace App\Database\Repositories\Implementations\Doctrine;
 
 use PDOException;
 use RuntimeException;
-use Core\Dbal\AuthInterface;
 use InvalidArgumentException;
+use Core\Database\AuthInterface;
 use App\Database\Entities\UserEntity;
 use Doctrine\DBAL\Exception as DBALException;
-use Core\Dbal\Exceptions\EntityNotFoundException;
+use Core\Database\Exceptions\EntityNotFoundException;
 use App\Database\Repositories\Interfaces\UserRepositoryInterface;
 use Core\Database\Implementations\Doctrine\AbstractRepositoryDoctrine;
 

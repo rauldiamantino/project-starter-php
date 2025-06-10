@@ -3,7 +3,7 @@
 namespace Core\Library;
 
 use Core\Library\Session;
-use Core\Dbal\Exceptions\EntityNotFoundException;
+use Core\Database\Exceptions\EntityNotFoundException;
 use App\Database\Repositories\Interfaces\UserRepositoryInterface;
 
 class Auth

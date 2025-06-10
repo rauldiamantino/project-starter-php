@@ -3,12 +3,12 @@
 namespace Core\Database\Implementations\Doctrine;
 
 use PDOException;
-use Core\Dbal\Entity;
+use Core\Database\Entity;
 use RuntimeException;
 use Core\Library\Logger;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\DBAL\Connection;
-use Core\Dbal\Exceptions\EntityNotFoundException;
+use Core\Database\Exceptions\EntityNotFoundException;
 
 abstract class AbstractRepositoryDoctrine
 {

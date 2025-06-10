@@ -2,20 +2,20 @@
 
 use Core\Library\Twig;
 use Core\Library\Logger;
-use Core\Dbal\Connection;
 use Core\Library\Request;
 use Twig\Extension\DebugExtension;
 use Doctrine\DBAL\Connection as DBALConnection;
 use App\Database\Repositories\Interfaces\UserRepositoryInterface;
+use App\Database\Repositories\Interfaces\ArticleRepositoryInterface;
 use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
 use App\Database\Repositories\Interfaces\CategoryRepositoryInterface;
-use App\Database\Repositories\Interfaces\ArticleRepositoryInterface;
 use App\Database\Repositories\Interfaces\ArticleContentRepositoryInterface;
 use App\Database\Repositories\Implementations\Doctrine\UserRepositoryDoctrine;
+use App\Database\Repositories\Implementations\Doctrine\ArticleRepositoryDoctrine;
 use App\Database\Repositories\Implementations\Doctrine\CompanyRepositoryDoctrine;
 use App\Database\Repositories\Implementations\Doctrine\CategoryRepositoryDoctrine;
-use App\Database\Repositories\Implementations\Doctrine\ArticleRepositoryDoctrine;
 use App\Database\Repositories\Implementations\Doctrine\ArticleContentRepositoryDoctrine;
+use Core\Database\Implementations\Doctrine\ConnectionDoctrine;
 
 use function DI\get;
 use function DI\create;
@@ -24,7 +24,7 @@ $logFilePath = dirname(__FILE__, 3) . '/Temp/Logs/application.log';
 
 return [
     Request::class => Request::create(),
-    DBALConnection::class => Connection::create(),
+    DBALConnection::class => ConnectionDoctrine::create(),
     Logger::class => create(Logger::class)->constructor($logFilePath),
     Twig::class => function () {
         $twig = new Twig();
