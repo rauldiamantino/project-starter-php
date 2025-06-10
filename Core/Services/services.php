@@ -1,8 +1,6 @@
 <?php
 
-use function DI\get;
 use Core\Library\Twig;
-use function DI\create;
 use Core\Library\Logger;
 use Core\Dbal\Connection;
 use Core\Library\Request;
@@ -18,6 +16,9 @@ use App\Database\Repositories\Implementations\Doctrine\CompanyRepositoryDoctrine
 use App\Database\Repositories\Implementations\Doctrine\CategoryRepositoryDoctrine;
 use App\Database\Repositories\Implementations\Doctrine\ArticleRepositoryDoctrine;
 use App\Database\Repositories\Implementations\Doctrine\ArticleContentRepositoryDoctrine;
+
+use function DI\get;
+use function DI\create;
 
 $logFilePath = dirname(__FILE__, 3) . '/Temp/Logs/application.log';
 
