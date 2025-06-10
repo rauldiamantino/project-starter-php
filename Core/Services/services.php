@@ -1,15 +1,17 @@
 <?php
 
-use App\Database\Repositories\Implementations\Doctrine\CompanyRepositoryDoctrine;
-use App\Database\Repositories\Implementations\Doctrine\UserRepositoryDoctrine;
-use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
-use App\Database\Repositories\Interfaces\UserRepositoryInterface;
 use Core\Library\Twig;
 use Core\Dbal\Connection;
 use Core\Library\Logger;
 use Core\Library\Request;
 use Twig\Extension\DebugExtension;
 use Doctrine\DBAL\Connection as DBALConnection;
+use App\Database\Repositories\Interfaces\UserRepositoryInterface;
+use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
+use App\Database\Repositories\Interfaces\ArticleContentRepositoryInterface;
+use App\Database\Repositories\Implementations\Doctrine\UserRepositoryDoctrine;
+use App\Database\Repositories\Implementations\Doctrine\CompanyRepositoryDoctrine;
+use App\Database\Repositories\Implementations\Doctrine\ArticleContentRepositoryDoctrine;
 
 use function DI\create;
 use function DI\get;
@@ -29,5 +31,7 @@ return [
     UserRepositoryInterface::class => create(UserRepositoryDoctrine::class)
         ->constructor(get(DBALConnection::class), get(Logger::class)),
     CompanyRepositoryInterface::class => create(CompanyRepositoryDoctrine::class)
+        ->constructor(get(DBALConnection::class), get(Logger::class)),
+    ArticleContentRepositoryInterface::class => create(ArticleContentRepositoryDoctrine::class)
         ->constructor(get(DBALConnection::class), get(Logger::class)),
 ];

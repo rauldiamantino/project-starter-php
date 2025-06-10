@@ -15,7 +15,7 @@ use App\Exceptions\NameAlreadyExistsException;
 use App\Database\Repositories\ArticleRepository;
 use App\Database\Repositories\CategoryRepository;
 use App\Exceptions\CompanyHasDependentsException;
-use App\Database\Repositories\ArticleContentRepository;
+use App\Database\Repositories\Interfaces\ArticleContentRepositoryInterface;
 use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
 use App\Database\Repositories\Interfaces\UserRepositoryInterface;
 
@@ -27,7 +27,7 @@ class CompanyService
         private CategoryRepository $categoryRepository,
         private UserRepositoryInterface $userRepositoryInterface,
         private ArticleRepository $articleRepository,
-        private ArticleContentRepository $articleContentRepository,
+        private ArticleContentRepositoryInterface $articleContentRepositoryInterface,
     ) {
     }
 
@@ -134,7 +134,7 @@ class CompanyService
             $this->userRepositoryInterface,
             $this->categoryRepository,
             $this->articleRepository,
-            $this->articleContentRepository,
+            $this->articleContentRepositoryInterface,
         ];
 
         foreach ($repositoriesToCheck as $repository) {
