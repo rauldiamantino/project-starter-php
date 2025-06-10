@@ -13,17 +13,17 @@ use App\Exceptions\CompanyNotExistsException;
 use App\Exceptions\CnpjAlreadyExistsException;
 use App\Exceptions\NameAlreadyExistsException;
 use App\Database\Repositories\ArticleRepository;
-use App\Database\Repositories\CompanyRepository;
 use App\Database\Repositories\CategoryRepository;
 use App\Exceptions\CompanyHasDependentsException;
 use App\Database\Repositories\ArticleContentRepository;
+use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
 use App\Database\Repositories\Interfaces\UserRepositoryInterface;
 
 class CompanyService
 {
     public function __construct(
-        private CompanyRepository $companyRepository,
         private Logger $logger,
+        private CompanyRepositoryInterface $companyRepositoryInterface,
         private CategoryRepository $categoryRepository,
         private UserRepositoryInterface $userRepositoryInterface,
         private ArticleRepository $articleRepository,
@@ -33,11 +33,11 @@ class CompanyService
 
     public function createCompany(array $companyData): CompanyEntity
     {
-        if ($this->companyRepository->nameExists($companyData['name'])) {
+        if ($this->companyRepositoryInterface->nameExists($companyData['name'])) {
             throw new NameAlreadyExistsException('The name already exists');
         }
 
-        if ($this->companyRepository->cnpjExists(onlyNumbers($companyData['cnpj']))) {
+        if ($this->companyRepositoryInterface->cnpjExists(onlyNumbers($companyData['cnpj']))) {
             throw new CnpjAlreadyExistsException('The cnpj already exists');
         }
 
@@ -54,32 +54,32 @@ class CompanyService
             throw new RuntimeException('Internal error: invalid data provided for company entity creation.', 0, $e);
         }
 
-        return $this->companyRepository->createCompany($entity);
+        return $this->companyRepositoryInterface->createCompany($entity);
     }
 
     public function editCompany(int $id, array $companyData): CompanyEntity
     {
-        if ($this->companyRepository->nameExists($companyData['name'], $id)) {
+        if ($this->companyRepositoryInterface->nameExists($companyData['name'], $id)) {
             throw new NameAlreadyExistsException('The name already exists');
         }
 
-        if ($this->companyRepository->cnpjExists(onlyNumbers($companyData['cnpj']), $id)) {
+        if ($this->companyRepositoryInterface->cnpjExists(onlyNumbers($companyData['cnpj']), $id)) {
             throw new CnpjAlreadyExistsException('The cnpj already exists');
         }
 
-        $entity = $this->companyRepository->getCompanyById($id);
+        $entity = $this->companyRepositoryInterface->getCompanyById($id);
         $entity->setName($companyData['name']);
         $entity->setCnpj(onlyNumbers($companyData['cnpj']));
         $entity->setIsActive($companyData['is_active']);
         $entity->setUpdatedAt(date('Y-m-d H:i:s'));
-        $this->companyRepository->updateCompany($entity);
+        $this->companyRepositoryInterface->updateCompany($entity);
 
         return $entity;
     }
 
     public function deleteCompanyById(int $id): void
     {
-        $company = $this->companyRepository->getCompanyById($id);
+        $company = $this->companyRepositoryInterface->getCompanyById($id);
 
         if (!$company) {
             throw new CompanyNotExistsException("Company with ID {$id} does not exist.");
@@ -90,7 +90,7 @@ class CompanyService
         }
 
         try {
-            $this->companyRepository->deleteCompany($company);
+            $this->companyRepositoryInterface->deleteCompany($company);
         } catch (PDOException $e) {
             $this->logger->error('Persistence error when deleting company: ' . $e->getMessage());
             throw new RuntimeException('Error deleting company from database.', 0, $e);
@@ -102,12 +102,12 @@ class CompanyService
 
     public function findAllCompanies(): array
     {
-        return $this->companyRepository->findAllCompanies();
+        return $this->companyRepositoryInterface->findAllCompanies();
     }
 
     public function getCompanyById(int $id): CompanyEntity
     {
-        return $this->companyRepository->getCompanyById($id);
+        return $this->companyRepositoryInterface->getCompanyById($id);
     }
 
 
@@ -117,7 +117,7 @@ class CompanyService
         $finalSlug = $slug;
         $counter = 1;
 
-        while ($this->companyRepository->slugExists($finalSlug)) {
+        while ($this->companyRepositoryInterface->slugExists($finalSlug)) {
             $finalSlug = $slug . '-' . $counter++;
 
             if ($counter > 100) {

@@ -9,7 +9,7 @@ use InvalidArgumentException;
 use App\Database\Entities\UserEntity;
 use App\Exceptions\CompanyNotExistsException;
 use App\Exceptions\EmailAlreadyExistsException;
-use App\Database\Repositories\CompanyRepository;
+use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
 use App\Database\Repositories\Interfaces\UserRepositoryInterface;
 use Core\Dbal\Exceptions\EntityNotFoundException;
 
@@ -17,7 +17,7 @@ class UserService
 {
     public function __construct(
         private UserRepositoryInterface $userRepositoryInterface,
-        private CompanyRepository $companyRepository,
+        private CompanyRepositoryInterface $companyRepositoryInterface,
         private Logger $logger,
     ) {
     }
@@ -25,7 +25,7 @@ class UserService
     public function createUser(array $userData): UserEntity
     {
         try {
-            $company = $this->companyRepository->getCompanyById($userData['company_id']);
+            $company = $this->companyRepositoryInterface->getCompanyById($userData['company_id']);
         } catch (EntityNotFoundException $e) {
             throw new CompanyNotExistsException('This company does not exists');
         }

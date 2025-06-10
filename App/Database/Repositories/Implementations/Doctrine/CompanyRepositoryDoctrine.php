@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Database\Repositories;
+namespace App\Database\Repositories\Implementations\Doctrine;
 
 use Core\Dbal\Repository;
 use PDOException;
@@ -8,8 +8,9 @@ use InvalidArgumentException;
 use RuntimeException;
 use Doctrine\DBAL\Exception as DBALException;
 use App\Database\Entities\CompanyEntity;
+use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
 
-class CompanyRepository extends Repository
+class CompanyRepositoryDoctrine extends Repository implements CompanyRepositoryInterface
 {
     protected string $table = 'companies';
 

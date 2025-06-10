@@ -1,6 +1,8 @@
 <?php
 
+use App\Database\Repositories\Implementations\Doctrine\CompanyRepositoryDoctrine;
 use App\Database\Repositories\Implementations\Doctrine\UserRepositoryDoctrine;
+use App\Database\Repositories\Interfaces\CompanyRepositoryInterface;
 use App\Database\Repositories\Interfaces\UserRepositoryInterface;
 use Core\Library\Twig;
 use Core\Dbal\Connection;
@@ -15,15 +17,17 @@ use function DI\get;
 $logFilePath = dirname(__FILE__, 3) . '/Temp/Logs/application.log';
 
 return [
-  Request::class => Request::create(),
-  DBALConnection::class => Connection::create(),
-  Logger::class => create(Logger::class)->constructor($logFilePath),
-  Twig::class => function () {
-      $twig = new Twig();
-      $twig->add_functions();
-      $twig->env->addExtension(new DebugExtension());
-      return $twig;
-  },
-  UserRepositoryInterface::class => create(UserRepositoryDoctrine::class)
-      ->constructor(get(DBALConnection::class), get(Logger::class)),
+    Request::class => Request::create(),
+    DBALConnection::class => Connection::create(),
+    Logger::class => create(Logger::class)->constructor($logFilePath),
+    Twig::class => function () {
+        $twig = new Twig();
+        $twig->add_functions();
+        $twig->env->addExtension(new DebugExtension());
+        return $twig;
+    },
+    UserRepositoryInterface::class => create(UserRepositoryDoctrine::class)
+        ->constructor(get(DBALConnection::class), get(Logger::class)),
+    CompanyRepositoryInterface::class => create(CompanyRepositoryDoctrine::class)
+        ->constructor(get(DBALConnection::class), get(Logger::class)),
 ];
